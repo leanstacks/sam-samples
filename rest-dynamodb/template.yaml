@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  rest-dynamodb
+
+  SAM Template for rest-dynamodb
+
+Globals:
+  Function:
+    CodeUri: src/handlers/
+    MemorySize: 128
+    Runtime: nodejs16.x
+    Timeout: 6
+    Environment:
+      Variables:
+        SAMPLE_TABLE: !Ref SampleTable
+
+Resources:
+  getAllItemsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: get-all-items.getAllItemsHandler
+      Description: A simple example includes a HTTP get method to get all items from a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+
+  getByIdFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: get-by-id.getByIdHandler
+      Description: A simple example includes a HTTP get method to get one item by id from a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{id}
+            Method: GET
+
+  putItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: put-item.putItemHandler
+      Description: A simple example includes a HTTP post method to add one item to a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: POST
+
+  SampleTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+
+Outputs:
+  ApiEndpoint:
+    Description: 'API Gateway endpoint URL'
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'

@@ -1,0 +1,11 @@
+# Node
+node_modules
+
+# SAM
+.aws-sam
+
+# DynamoDB Local
+.dynamodb
+
+# Miscellaneous
+*.log
