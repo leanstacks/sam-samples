@@ -14,16 +14,18 @@ Each sub-directory contains a sample project illustrating a specific feature or 
 
 If you are new to serverless software engineering or simply looking for a table of contents, the list below is a general guideline for exploring the samples in this repository in a meaningful order.
 
-## Coming Soon
+### rest-hello
 
-Specific samples are coming soon.
+The [rest-hello](./rest-hello/README.md) sample is an introduction to AWS SAM. Deploy a "Hello World" REST API application demonstrating how to handle events from the API Gateway in AWS Lambda.
 
 ## See Also
 
 [LEAN**STACKS**][leanstacks]  
 [AWS Serverless Application Model][aws-sam]  
-[AWS SAM Documentation][aws-sam-docs]
+[AWS SAM Documentation][aws-sam-docs]  
+[AWS SAM Examples Repository][aws-sam-repos-examples]
 
 [leanstacks]: https://leanstacks.com/ 'LEANSTACKS'
 [aws-sam]: https://aws.amazon.com/serverless/sam/ 'AWS Serverless Application Model (SAM)'
 [aws-sam-docs]: https://docs.aws.amazon.com/serverless-application-model/index.html 'SAM Documentation'
+[aws-sam-repos-examples]: https://github.com/amazon-archives/serverless-app-examples 'SAM Examples Repo'
