@@ -29,10 +29,17 @@ exports.handle = async (event) => {
   const data = await docClient.get(params).promise();
   const item = data.Item;
 
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify(item),
-  };
+  let response;
+  if (item) {
+    response = {
+      statusCode: 200,
+      body: JSON.stringify(item),
+    };
+  } else {
+    response = {
+      statusCode: 404,
+    };
+  }
 
   // All log statements are written to CloudWatch
   console.info(
