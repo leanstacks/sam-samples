@@ -1,5 +1,5 @@
-// Import all functions from put-item
-const lambda = require('../../../handlers/put-item');
+// Import all functions from create-item.js
+const lambda = require('../../../handlers/create-item');
 // Import dynamodb from aws-sdk
 const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
 

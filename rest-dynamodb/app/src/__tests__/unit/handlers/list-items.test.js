@@ -1,5 +1,5 @@
-// Import all functions from get-all-items.js
-const lambda = require('../../../handlers/get-all-items');
+// Import all functions from list-items.js
+const lambda = require('../../../handlers/list-items');
 // Import dynamodb from aws-sdk
 const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
 
