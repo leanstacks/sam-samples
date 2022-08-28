@@ -5,7 +5,8 @@
   "author": "Matthew Warman <leanstacker@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "2.1203.0"
+    "@aws-sdk/client-dynamodb": "3.159.0",
+    "@aws-sdk/lib-dynamodb": "3.159.0"
   },
   "devDependencies": {
     "jest": "29.0.1"

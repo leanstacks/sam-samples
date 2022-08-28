@@ -7,7 +7,7 @@ Description: >
 
 Globals:
   Function:
-    CodeUri: src/handlers/
+    CodeUri: app/
     MemorySize: 128
     Runtime: nodejs16.x
     Timeout: 6
@@ -19,7 +19,7 @@ Resources:
   getAllItemsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: get-all-items.handle
+      Handler: src/handlers/get-all-items.handle
       Description: A simple example includes a HTTP get method to get all items from a DynamoDB table.
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
@@ -35,7 +35,7 @@ Resources:
   getByIdFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: get-by-id.handle
+      Handler: src/handlers/get-by-id.handle
       Description: A simple example includes a HTTP get method to get one item by id from a DynamoDB table.
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
@@ -45,13 +45,13 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /{id}
+            Path: /{itemId}
             Method: GET
 
   putItemFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: put-item.handle
+      Handler: src/handlers/put-item.handle
       Description: A simple example includes a HTTP post method to add one item to a DynamoDB table.
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
