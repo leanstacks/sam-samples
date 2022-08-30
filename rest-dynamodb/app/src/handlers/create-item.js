@@ -29,7 +29,7 @@ const dynamoDb = DynamoDBDocumentClient.from(
  */
 exports.handle = async (event) => {
   // all log statements are written to CloudWatch
-  console.log(`PutItem::handle::event::${JSON.stringify(event)}`);
+  console.log(`CreateItem::handle::event::${JSON.stringify(event)}`);
 
   // parse the request
   const { name } = JSON.parse(event.body);
@@ -40,6 +40,7 @@ exports.handle = async (event) => {
   const itemObj = {
     id,
     name,
+    createdAt: new Date().toISOString(),
   };
   await dynamoDb.send(
     new PutCommand({

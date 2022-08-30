@@ -64,6 +64,22 @@ Resources:
             Path: /
             Method: POST
 
+  updateItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/update-item.handle
+      Description: A simple example includes a HTTP put method to update one item by id in a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{itemId}
+            Method: PUT
+
   deleteItemFunction:
     Type: AWS::Serverless::Function
     Properties:
