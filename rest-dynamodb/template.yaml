@@ -48,7 +48,7 @@ Resources:
             Path: /{itemId}
             Method: GET
 
-  putItemFunction:
+  createItemFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/create-item.handle
@@ -63,6 +63,22 @@ Resources:
           Properties:
             Path: /
             Method: POST
+
+  deleteItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/delete-item.handle
+      Description: A simple example includes a HTTP delete method to delete one item by id from a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{itemId}
+            Method: DELETE
 
   SampleTable:
     Type: AWS::Serverless::SimpleTable
