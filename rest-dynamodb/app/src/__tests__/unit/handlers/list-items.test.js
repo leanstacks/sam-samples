@@ -28,7 +28,7 @@ describe('handler::ListItems', () => {
     const items = [{ id: 'id1' }, { id: 'id2' }];
 
     // Return the specified value whenever the spied function is called
-    sendSpy.mockReturnValue(Promise.resolve({ Items: items }));
+    sendSpy.mockResolvedValue({ Items: items });
 
     const event = {
       httpMethod: 'GET',

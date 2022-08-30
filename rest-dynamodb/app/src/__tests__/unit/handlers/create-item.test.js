@@ -28,7 +28,7 @@ describe('handler::CreateItem', function () {
     const returnedItem = { id: 'id1', name: 'name1' };
 
     // Return the specified value whenever the spied put function is called
-    sendSpy.mockReturnValue(Promise.resolve(returnedItem));
+    sendSpy.mockResolvedValue(returnedItem);
 
     const event = {
       httpMethod: 'POST',
