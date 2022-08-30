@@ -1,0 +1,699 @@
+{
+	"info": {
+		"_postman_id": "0e8f92e9-0be9-4725-b837-9a4fd5471954",
+		"name": "REST DynamoDB",
+		"description": "A companion to the LEANSTACKS SAM Samples project. This collection contains requests and documentation for the `rest-dynamodb` sample.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "217295"
+	},
+	"item": [
+		{
+			"name": "List Items",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should have status code 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{gatewayUrl}}/",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						""
+					]
+				},
+				"description": "Fetch a list of all items."
+			},
+			"response": [
+				{
+					"name": "200 OK",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "130"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Aug 2022 11:26:10 GMT"
+						},
+						{
+							"key": "x-amzn-RequestId",
+							"value": "57f85073-2cfa-4c2f-a075-d41ecfd0feb5"
+						},
+						{
+							"key": "x-amz-apigw-id",
+							"value": "XhTU3GcKoAMFQww="
+						},
+						{
+							"key": "X-Amzn-Trace-Id",
+							"value": "Root=1-6309ff52-5a3940cb54d0ccd97d3c34f7;Sampled=0"
+						},
+						{
+							"key": "X-Cache",
+							"value": "Miss from cloudfront"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 fb375a653722ce5e68a7a911d67c0f10.cloudfront.net (CloudFront)"
+						},
+						{
+							"key": "X-Amz-Cf-Pop",
+							"value": "ATL56-C4"
+						},
+						{
+							"key": "X-Amz-Cf-Id",
+							"value": "WGicOKHi4lP6cGnBYf_A3M80_9vwigS6K1ffA_YwNuLCLG5ZToQlLw=="
+						}
+					],
+					"cookie": [],
+					"body": "[\n  {\n    \"id\": \"a1b2c3d4a1b2c3d4\",\n    \"name\": \"Cheyanne\",\n    \"createdAt\": \"2022-08-30T12:59:22.267Z\"\n  },\n  {\n    \"id\": \"b2c3d4a1b2c3d4a1\",\n    \"name\": \"Estefania\",\n    \"createdAt\": \"2022-08-30T12:55:11.665Z\",\n    \"updatedAt\": \"2022-08-30T14:55:23.738Z\"\n  }\n]"
+				}
+			]
+		},
+		{
+			"name": "Find Item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should have status code 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{gatewayUrl}}/:itemId",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						":itemId"
+					],
+					"variable": [
+						{
+							"key": "itemId",
+							"value": "{{itemId}}",
+							"description": "An Item identifier."
+						}
+					]
+				},
+				"description": "Find a single item by its identifier."
+			},
+			"response": [
+				{
+					"name": "200 OK",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/:itemId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								":itemId"
+							],
+							"variable": [
+								{
+									"key": "itemId",
+									"value": "a1b2c3d4a1b2c3d4",
+									"description": "An Item identifier."
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "63"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Aug 2022 11:26:05 GMT"
+						},
+						{
+							"key": "x-amzn-RequestId",
+							"value": "afab5752-532a-4f6b-a797-33de629c711a"
+						},
+						{
+							"key": "x-amz-apigw-id",
+							"value": "XhTUGE2voAMFmfw="
+						},
+						{
+							"key": "X-Amzn-Trace-Id",
+							"value": "Root=1-6309ff4d-2f53874c447dba48111a4dff;Sampled=0"
+						},
+						{
+							"key": "X-Cache",
+							"value": "Miss from cloudfront"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 fb375a653722ce5e68a7a911d67c0f10.cloudfront.net (CloudFront)"
+						},
+						{
+							"key": "X-Amz-Cf-Pop",
+							"value": "ATL56-C4"
+						},
+						{
+							"key": "X-Amz-Cf-Id",
+							"value": "tuIufkKby0HYc_ar6EhYpCNO8V35YYo3Uh7LU9DzS6sN0Mz8_WzJaA=="
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"id\": \"a1b2c3d4a1b2c3d4\",\n  \"name\": \"Cheyanne\",\n  \"createdAt\": \"2022-08-30T12:55:11.665Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should have status code 201\", function () {",
+							"  pm.response.to.have.status(201);",
+							"});",
+							"if (pm.response.code === 201) {",
+							"  var jsonData = pm.response.json();",
+							"  pm.collectionVariables.set(\"itemId\", jsonData.id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"{{$randomFirstName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{gatewayUrl}}/",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						""
+					]
+				},
+				"description": "Create a new item."
+			},
+			"response": [
+				{
+					"name": "201 CREATED",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Cheyanne\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "63"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Aug 2022 11:26:02 GMT"
+						},
+						{
+							"key": "x-amzn-RequestId",
+							"value": "32374f39-4556-4b24-93fd-1643eefbfdb7"
+						},
+						{
+							"key": "x-amz-apigw-id",
+							"value": "XhTTlHHZoAMFjIA="
+						},
+						{
+							"key": "X-Amzn-Trace-Id",
+							"value": "Root=1-6309ff49-617c557c4b484a6d1913396f;Sampled=0"
+						},
+						{
+							"key": "X-Cache",
+							"value": "Miss from cloudfront"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 fb375a653722ce5e68a7a911d67c0f10.cloudfront.net (CloudFront)"
+						},
+						{
+							"key": "X-Amz-Cf-Pop",
+							"value": "ATL56-C4"
+						},
+						{
+							"key": "X-Amz-Cf-Id",
+							"value": "pynGhIFFsbBcyvgerJ5NQqKNlQ-9pHZUX0wmrFR-zVXDn1qxHtZMJw=="
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"id\": \"a1b2c3d4a1b2c3d4\",\n  \"name\": \"Cheyanne\",\n  \"createdAt\": \"2022-08-30T12:59:22.267Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should have status code 204\", function () {",
+							"  pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{gatewayUrl}}/:itemId",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						":itemId"
+					],
+					"variable": [
+						{
+							"key": "itemId",
+							"value": "{{itemId}}",
+							"description": "An Item identifier."
+						}
+					]
+				},
+				"description": "Delete an item."
+			},
+			"response": [
+				{
+					"name": "204 NO CONTENT",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/:itemId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								":itemId"
+							],
+							"variable": [
+								{
+									"key": "itemId",
+									"value": "a1b2c3d4a1b2c3d4",
+									"description": "An Item identifier."
+								}
+							]
+						}
+					},
+					"status": "No Content",
+					"code": 204,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Aug 2022 12:52:30 GMT"
+						},
+						{
+							"key": "x-amzn-RequestId",
+							"value": "8b912e27-fb1a-48d0-8402-c210149661f0"
+						},
+						{
+							"key": "x-amz-apigw-id",
+							"value": "XrYyIFoPIAMF9uQ="
+						},
+						{
+							"key": "X-Amzn-Trace-Id",
+							"value": "Root=1-630e080d-1c51bc3718f70e0f37c58834;Sampled=0"
+						},
+						{
+							"key": "X-Cache",
+							"value": "Miss from cloudfront"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 ac4b98f2fa28f0028b6d571d0a37de84.cloudfront.net (CloudFront)"
+						},
+						{
+							"key": "X-Amz-Cf-Pop",
+							"value": "ATL51-C1"
+						},
+						{
+							"key": "X-Amz-Cf-Id",
+							"value": "cAMrgdF2i30UsyfDk7WOYVOjb6sP8xPieiQw3kpw6e06J3fHGd7z_Q=="
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Update Item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should have status code 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"{{$randomFirstName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{gatewayUrl}}/:itemId",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						":itemId"
+					],
+					"variable": [
+						{
+							"key": "itemId",
+							"value": "{{itemId}}",
+							"description": "An Item identifier."
+						}
+					]
+				},
+				"description": "Update an item."
+			},
+			"response": [
+				{
+					"name": "200 OK",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Bailee\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/:itemId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								":itemId"
+							],
+							"variable": [
+								{
+									"key": "itemId",
+									"value": "a1b2c3d4a1b2c3d4",
+									"description": "An Item identifier."
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "119"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Aug 2022 12:55:24 GMT"
+						},
+						{
+							"key": "x-amzn-RequestId",
+							"value": "0b9ffc07-6d07-4827-89cb-10611fe90a3d"
+						},
+						{
+							"key": "x-amz-apigw-id",
+							"value": "XrZNPHzdoAMF0vw="
+						},
+						{
+							"key": "X-Amzn-Trace-Id",
+							"value": "Root=1-630e08ba-044804f64c838e5878d408df;Sampled=0"
+						},
+						{
+							"key": "X-Cache",
+							"value": "Miss from cloudfront"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 ac4b98f2fa28f0028b6d571d0a37de84.cloudfront.net (CloudFront)"
+						},
+						{
+							"key": "X-Amz-Cf-Pop",
+							"value": "ATL51-C1"
+						},
+						{
+							"key": "X-Amz-Cf-Id",
+							"value": "N_sSbuRqiVVXIGza2yOAvg7pVmclHyWHlBX4KKMVQi3HgdsoKQ1U_g=="
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"id\": \"a1b2c3d4a1b2c3d4\",\n  \"name\": \"Bailee\",\n  \"createdAt\": \"2022-08-30T12:55:11.665Z\",\n  \"updatedAt\": \"2022-08-30T14:55:23.738Z\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "gatewayUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "itemId",
+			"value": "a1b2c3d4a1b2c3d4",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "sam-samples-rest-dynamodb",
+  "version": "1.0.0",
+  "repository": "https://github.com/leanstacks/sam-samples",
+  "author": "Matthew Warman <leanstacker@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "3.160.0",
+    "@aws-sdk/lib-dynamodb": "3.160.0"
+  },
+  "devDependencies": {
+    "jest": "29.0.1"
+  },
+  "scripts": {
+    "test": "jest --silent --coverage"
+  }
+}

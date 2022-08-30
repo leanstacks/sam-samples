@@ -18,6 +18,12 @@ If you are new to serverless software engineering or simply looking for a table 
 
 The [rest-hello](./rest-hello/README.md) sample is an introduction to AWS SAM. Deploy a "Hello World" REST API application demonstrating how to handle events from the API Gateway in AWS Lambda.
 
+### rest-dynamodb
+
+The [rest-dynamodb](./rest-dynamodb/README.md) sample introduces using DynamoDB with AWS SAM. This is a basic example of how to implement REST API endpoints which provide CRUD operations for a simple business domain _"Item"_. Data for the REST resource is persisted in DynamoDB.
+
+This sample application is the introductory example for using DynamoDB. This project contains other DynamoDB samples which build upon this one.
+
 ## See Also
 
 [LEAN**STACKS**][leanstacks]  
