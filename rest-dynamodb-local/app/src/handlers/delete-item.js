@@ -6,6 +6,7 @@ const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 // Get environment variable values
 const TABLE_NAME = process.env.SAMPLE_TABLE;
 const AWS_REGION = process.env.AWS_REGION;
+// AWS_SAM_LOCAL="true" when using any 'sam local...' command
 const AWS_SAM_LOCAL = process.env.AWS_SAM_LOCAL;
 
 // Create an AWS DynamoDBDocumentClient
@@ -22,6 +23,7 @@ const translateConfig = { marshallOptions, unmarshallOptions };
 const dynamoDBClientConfig = {
   region: AWS_REGION,
 };
+// If running locally, connect to local DynamoDBs
 if (AWS_SAM_LOCAL) {
   dynamoDBClientConfig.endpoint = 'http://dynamodb:8000';
 }
