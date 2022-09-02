@@ -38,17 +38,17 @@ This sample project illustrates how a SAM application which depends on DynamoDB 
 
 ### How it works
 
-To run your function locally with DynamoDB, you need to do NN things.
+To run your function locally with DynamoDB, you need to do 3 things.
 
 First, you need to run DynamoDB locally in a Docker container.
 
 Second, you need to create the `SampleTable` in the local DynamoDB container.
 
-Third, you need to configure the DynamoDB Client in your function to connect to the container-hosted DynamoDB when running the functions locally.
+Third, you need to configure the DynamoDB Client in your functions to connect to the container-hosted DynamoDB when running the functions locally.
 
 #### Running the DynamoDB Docker container
 
-Reference the `docker-compose.yaml` file in this sample. This Docker Compose configuration file starts an ephemeral instance of DynamoDB on a Docker network named `sam-samples`.
+Reference the `docker-compose.yaml` file in this sample. This Docker Compose configuration file provisions an ephemeral instance of DynamoDB on a Docker network named `sam-samples`.
 
 > **NOTE:** The Docker network is important. Both the functions and DynamoDB must run on the same Docker network.
 
@@ -68,7 +68,7 @@ When a SAM application is run locally, the `AWS_SAM_LOCAL` environment variable 
 
 When a function is running in AWS, the AWS SDK knows the `endpoint` to use to connect to DynamoDB in a specific AWS Region. However, when running locally, we need to tell the DynamoDB client the `endpoint` for our local DynamoDB. This is where Docker Compose and our Docker network are important.
 
-Here is a snippet from the sample function:
+Here is a snippet from one of the functions in this sample:
 
 ```javascript
 const AWS_SAM_LOCAL = process.env.AWS_SAM_LOCAL;

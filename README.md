@@ -26,7 +26,7 @@ This sample application is the introductory example for using DynamoDB. This pro
 
 ### rest-dynamodb-local
 
-The [rest-dynamodb-local](.rest-dynamodb-local/README.md) sample builds upon the `rest-dynamodb` sample. This sample demonstrates how to run the SAM application locally with DynamoDB.
+The [rest-dynamodb-local](./rest-dynamodb-local/README.md) sample builds upon the `rest-dynamodb` sample. This sample demonstrates how to run the SAM application locally with DynamoDB.
 
 ## See Also
 
