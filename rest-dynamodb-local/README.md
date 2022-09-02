@@ -3,6 +3,7 @@
 This project contains source code and supporting files for a serverless application that you can deploy with the AWS Serverless Application Model (AWS SAM) command line interface (CLI). It includes the following files and folders:
 
 - `app` - The SAM application.
+- `app\docker-compose.yaml` - A Docker Compose configuration file to run DynamoDB locally.
 - `app\src` - Code for the application's Lambda function.
 - `app\events` - Invocation events that you can use to invoke the function.
 - `app\src\__tests__` - Unit tests for the application code.
@@ -17,6 +18,9 @@ The following are required to run this sample.
 - AWS Account
 - SAM CLI
 - NVM with Node 16.x (lts/gallium)
+- Docker and Docker Compose
+
+> **NOTE:** Amazon DynamoDB runs locally in a Docker container.
 
 ## Build
 
@@ -24,6 +28,105 @@ Run the following command in the sample base directory:
 
 ```bash
 sam build
+```
+
+## Run Locally
+
+> **NOTE:** Requires that Docker and Docker Compose are installed. See the [installation guide][docker-install].
+
+This sample project illustrates how a SAM application which depends on DynamoDB can be run locally.
+
+### How it works
+
+To run your function locally with DynamoDB, you need to do NN things.
+
+First, you need to run DynamoDB locally in a Docker container.
+
+Second, you need to create the `SampleTable` in the local DynamoDB container.
+
+Third, you need to configure the DynamoDB Client in your function to connect to the container-hosted DynamoDB when running the functions locally.
+
+#### Running the DynamoDB Docker container
+
+Reference the `docker-compose.yaml` file in this sample. This Docker Compose configuration file starts an ephemeral instance of DynamoDB on a Docker network named `sam-samples`.
+
+> **NOTE:** The Docker network is important. Both the functions and DynamoDB must run on the same Docker network.
+
+#### Creating the Table
+
+With the DynamoDB container running, use the AWS CLI to create the `SampleTable` table. Use the following command at a terminal prompt:
+
+```bash
+aws dynamodb create-table --cli-input-json file://etc/dynamodb/sample-table-create.json --endpoint-url http://localhost:8000
+```
+
+This command connects to the local DynamoDB instance and issues the command found in the JSON file specified by the `--cli-input-json` parameter. The JSON contains the _create table_ specification for our `SampleTable`.
+
+#### Configuring functions to connect to local DynamoDB
+
+When a SAM application is run locally, the `AWS_SAM_LOCAL` environment variable is present, e.g. `AWS_SAM_LOCAL="true"`. Use this variable in your function logic to configure the DynamoDB client accordingly. Reference any of the functions in this sample to view a complete example.
+
+When a function is running in AWS, the AWS SDK knows the `endpoint` to use to connect to DynamoDB in a specific AWS Region. However, when running locally, we need to tell the DynamoDB client the `endpoint` for our local DynamoDB. This is where Docker Compose and our Docker network are important.
+
+Here is a snippet from the sample function:
+
+```javascript
+const AWS_SAM_LOCAL = process.env.AWS_SAM_LOCAL;
+
+...
+
+const dynamoDBClientConfig = {
+  region: AWS_REGION,
+};
+if (AWS_SAM_LOCAL) {
+  dynamoDBClientConfig.endpoint = 'http://dynamodb:8000';
+}
+const dynamoDb = DynamoDBDocumentClient.from(
+  new DynamoDBClient(dynamoDBClientConfig),
+  translateConfig,
+);
+```
+
+The DynamoDB client configuration object is updated to override the `endpoint` attribute when running locally. The endpoint URL uses the hostname and port of the Docker Compose _service_ which we named `dynamodb` in `docker-compose.yaml`.
+
+It is important for the SAM application to run on the **same** Docker network as DynamoDB. The `sam local` command has a parameter named `--docker-network` which allows you to specify the Docker network.
+
+Start the sample application using the following command at a terminal prompt:
+
+```bash
+sam local start-api --docker-network sam-samples
+```
+
+#### Putting it all together
+
+If you are thinking that this is a lot of commands to issue every time you want to run the application locally... it is. To simplify running the application locally, we use NPM commands and the `npm-run-all` package.
+
+To start DynamoDB locally and create the `SampleTable` simply run the following commands:
+
+```bash
+cd app
+npm install
+npm run start:local
+```
+
+The `start:local` script starts DynamoDB **and** creates the table.
+
+You can leave that running in the background and now develop using `sam local` commands as you normally would. From the sample base directory (where the `template.yaml` file is located), run:
+
+```bash
+sam build
+sam local start-api --docker-network sam-samples
+
+## OR ##
+
+sam local invoke createItemFunction --event app/events/event-create-item.json --docker-network sam-samples
+```
+
+When you are done using DynamoDB locally, simply run the following commands:
+
+```bash
+cd app
+npm run stop:local
 ```
 
 ## Deploy to AWS
@@ -48,7 +151,7 @@ The command will package and deploy your application to AWS, with a series of pr
 
 The API Gateway endpoint API will be displayed in the outputs when the deployment is complete.
 
-## Run
+## Run on AWS
 
 You can find your API Gateway Endpoint URL in the output values displayed after deployment.
 
@@ -102,3 +205,5 @@ Tests are defined in the `app/src/__tests__` directory of this project. Use `npm
 npm install
 npm run test
 ```
+
+[docker-install]: https://docs.docker.com/engine/install/ 'Install Docker Engine'
