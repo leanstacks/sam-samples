@@ -42,7 +42,7 @@ To run your function locally with DynamoDB, you need to do 3 things.
 
 First, you need to run DynamoDB locally in a Docker container.
 
-Second, you need to create the `SampleTable` in the local DynamoDB container.
+Second, you need to create the `SampleTable` in the local DynamoDB.
 
 Third, you need to configure the DynamoDB Client in your functions to connect to the container-hosted DynamoDB when running the functions locally.
 
@@ -101,7 +101,7 @@ sam local start-api --docker-network sam-samples
 
 If you are thinking that this is a lot of commands to issue every time you want to run the application locally... it is. To simplify running the application locally, we use NPM commands and the `npm-run-all` package.
 
-To start DynamoDB locally and create the `SampleTable` simply run the following commands:
+To start DynamoDB locally, create the `SampleTable`, and build your code simply run the following commands:
 
 ```bash
 cd app
@@ -109,12 +109,11 @@ npm install
 npm run start:local
 ```
 
-The `start:local` script starts DynamoDB **and** creates the table.
+The `start:local` script starts DynamoDB, creates the table, runs 'sam build' once, **and** watches your code for changes running 'sam build' again each time you make a change.
 
-You can leave that running in the background and now develop using `sam local` commands as you normally would. From the sample base directory (where the `template.yaml` file is located), run:
+You can leave that running in one terminal and now develop using `sam local` commands as you normally would. Open a second terminal and from the sample base directory (where the `template.yaml` file is located), run:
 
 ```bash
-sam build
 sam local start-api --docker-network sam-samples
 
 ## OR ##
