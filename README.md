@@ -24,6 +24,10 @@ The [rest-dynamodb](./rest-dynamodb/README.md) sample introduces using DynamoDB 
 
 This sample application is the introductory example for using DynamoDB. This project contains other DynamoDB samples which build upon this one.
 
+### rest-dynamodb-local
+
+The [rest-dynamodb-local](./rest-dynamodb-local/README.md) sample builds upon the `rest-dynamodb` sample. This sample demonstrates how to run the SAM application locally with DynamoDB.
+
 ## See Also
 
 [LEAN**STACKS**][leanstacks]  

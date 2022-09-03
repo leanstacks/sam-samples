@@ -1,0 +1,24 @@
+{
+  "name": "sam-samples-rest-dynamodb-local",
+  "version": "1.0.0",
+  "repository": "https://github.com/leanstacks/sam-samples",
+  "author": "Matthew Warman <leanstacker@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "3.163.0",
+    "@aws-sdk/lib-dynamodb": "3.163.0"
+  },
+  "devDependencies": {
+    "jest": "29.0.1",
+    "nodemon": "2.0.19",
+    "npm-run-all": "4.1.5"
+  },
+  "scripts": {
+    "start:local:docker": "docker compose up --detach",
+    "start:local:table": "aws dynamodb create-table --cli-input-json file://etc/dynamodb/sample-table-create.json --endpoint-url http://localhost:8000",
+    "start:local:build": "nodemon --exec sam build --template ../template.yaml --build-dir ../.aws-sam",
+    "start:local": "run-s start:local:docker start:local:table start:local:build",
+    "stop:local": "docker compose down",
+    "test": "jest --silent --coverage"
+  }
+}

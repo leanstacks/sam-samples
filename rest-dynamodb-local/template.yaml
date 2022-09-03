@@ -1,0 +1,110 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  rest-dynamodb-local
+
+  SAM Template for rest-dynamodb-local
+
+Globals:
+  Function:
+    CodeUri: app/
+    MemorySize: 128
+    Runtime: nodejs16.x
+    Timeout: 6
+    Environment:
+      Variables:
+        SAMPLE_TABLE: !Ref SampleTable
+
+Resources:
+  listItemsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/list-items.handle
+      Description: A simple example includes a HTTP get method to get all items from a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+
+  findItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/find-item.handle
+      Description: A simple example includes a HTTP get method to get one item by id from a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{itemId}
+            Method: GET
+
+  createItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/create-item.handle
+      Description: A simple example includes a HTTP post method to add one item to a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: POST
+
+  updateItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/update-item.handle
+      Description: A simple example includes a HTTP put method to update one item by id in a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{itemId}
+            Method: PUT
+
+  deleteItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/delete-item.handle
+      Description: A simple example includes a HTTP delete method to delete one item by id from a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{itemId}
+            Method: DELETE
+
+  SampleTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: sam-samples-rest-dynamodb-local
+      PrimaryKey:
+        Name: id
+        Type: String
+
+Outputs:
+  ApiEndpoint:
+    Description: 'API Gateway endpoint URL'
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'

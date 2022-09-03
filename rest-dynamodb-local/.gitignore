@@ -1,0 +1,12 @@
+# Node
+node_modules
+
+# SAM
+.aws-sam
+build.toml
+
+# DynamoDB Local
+.dynamodb
+
+# Miscellaneous
+*.log
