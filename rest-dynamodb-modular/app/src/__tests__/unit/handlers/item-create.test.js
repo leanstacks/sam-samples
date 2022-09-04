@@ -1,10 +1,10 @@
-// Import all functions from list-items.js
-const lambda = require('../../../handlers/list-items');
+// Import all functions from create-item.js
+const lambda = require('../../../handlers/item-create');
 // Import dynamodb from aws-sdk
 const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
 
-// This includes all tests for ListItems handler
-describe('handler::ListItems', () => {
+// This includes all tests for CreateItem handler
+describe('handler::CreateItem', function () {
   let sendSpy;
 
   // Test one-time setup and teardown, see more in https://jestjs.io/docs/en/setup-teardown
@@ -24,27 +24,24 @@ describe('handler::ListItems', () => {
     sendSpy.mockRestore();
   });
 
-  it('should return a list of items', async () => {
-    const items = [{ id: 'id1' }, { id: 'id2' }];
+  it('should create an item', async () => {
+    const returnedItem = { id: 'id1', name: 'name1' };
 
-    // Return the specified value whenever the spied function is called
-    sendSpy.mockResolvedValue({ Items: items });
+    // Return the specified value whenever the spied put function is called
+    sendSpy.mockResolvedValue(returnedItem);
 
     const event = {
-      httpMethod: 'GET',
+      httpMethod: 'POST',
+      body: '{"name": "name1"}',
     };
 
     // Invoke the handler
     const result = await lambda.handle(event);
 
-    const expectedResult = {
-      statusCode: 200,
-      body: JSON.stringify(items),
-    };
-
     // Expect dynamodb to have been called
     expect(sendSpy).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
-    expect(result).toEqual(expectedResult);
+    expect(result.body).toMatch(/name1/);
+    expect(result.statusCode).toEqual(201);
   });
 });

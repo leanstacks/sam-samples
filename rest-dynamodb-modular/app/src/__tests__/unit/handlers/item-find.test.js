@@ -1,11 +1,10 @@
-// Import all functions from update-item.js
-const lambda = require('../../../handlers/update-item');
+// Import all functions from find-item.js
+const lambda = require('../../../handlers/item-find');
 // Import dynamodb from aws-sdk
 const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
-const { ConditionalCheckFailedException } = require('@aws-sdk/client-dynamodb');
 
-// This includes all tests for CreateItem handler
-describe('handler::UpdateItem', function () {
+// This includes all tests for FindItem handler
+describe('handler::FindItem', () => {
   let sendSpy;
 
   // Test one-time setup and teardown, see more in https://jestjs.io/docs/en/setup-teardown
@@ -25,51 +24,56 @@ describe('handler::UpdateItem', function () {
     sendSpy.mockRestore();
   });
 
-  it('should update an item', async () => {
-    const returnedItem = { Attributes: { id: 'id1', name: 'name1' } };
+  it('should return item when found', async () => {
+    const item = { id: 'id1' };
 
-    // Return the specified value whenever the spied put function is called
-    sendSpy.mockResolvedValue(returnedItem);
+    // Return the specified value whenever the spied function is called
+    sendSpy.mockResolvedValue({ Item: item });
 
     const event = {
-      httpMethod: 'PUT',
+      httpMethod: 'GET',
       pathParameters: {
         itemId: 'id1',
       },
-      body: '{"name": "name1"}',
     };
 
     // Invoke the handler
     const result = await lambda.handle(event);
 
+    const expectedResult = {
+      statusCode: 200,
+      body: JSON.stringify(item),
+    };
+
     // Expect dynamodb to have been called
     expect(sendSpy).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
-    expect(result.body).toMatch(/name1/);
-    expect(result.statusCode).toEqual(200);
+    expect(result).toEqual(expectedResult);
   });
 
   it('should return status code 404 when not found', async () => {
-    const returnedItem = { Attributes: { id: 'id1', name: 'name1' } };
+    const item = { id: 'id1' };
 
-    // Return the specified value whenever the spied put function is called
-    sendSpy.mockRejectedValue(new ConditionalCheckFailedException());
+    // Return the specified value whenever the spied function is called
+    sendSpy.mockReturnValue(Promise.resolve({}));
 
     const event = {
-      httpMethod: 'PUT',
+      httpMethod: 'GET',
       pathParameters: {
         itemId: 'id1',
       },
-      body: '{"name": "name1"}',
     };
 
     // Invoke the handler
     const result = await lambda.handle(event);
 
+    const expectedResult = {
+      statusCode: 404,
+    };
+
     // Expect dynamodb to have been called
     expect(sendSpy).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
-    expect(result.body).toBeUndefined();
-    expect(result.statusCode).toEqual(404);
+    expect(result).toEqual(expectedResult);
   });
 });

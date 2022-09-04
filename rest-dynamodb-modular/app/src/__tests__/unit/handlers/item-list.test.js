@@ -1,10 +1,10 @@
-// Import all functions from delete-item.js
-const lambda = require('../../../handlers/delete-item');
+// Import all functions from list-items.js
+const lambda = require('../../../handlers/item-list');
 // Import dynamodb from aws-sdk
 const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
 
-// This includes all tests for FindItem handler
-describe('handler::DeleteItem', () => {
+// This includes all tests for ListItems handler
+describe('handler::ListItems', () => {
   let sendSpy;
 
   // Test one-time setup and teardown, see more in https://jestjs.io/docs/en/setup-teardown
@@ -24,24 +24,22 @@ describe('handler::DeleteItem', () => {
     sendSpy.mockRestore();
   });
 
-  it('should return status code 204 when successful', async () => {
-    const item = { id: 'id1' };
+  it('should return a list of items', async () => {
+    const items = [{ id: 'id1' }, { id: 'id2' }];
 
     // Return the specified value whenever the spied function is called
-    sendSpy.mockResolvedValue({});
+    sendSpy.mockResolvedValue({ Items: items });
 
     const event = {
-      httpMethod: 'DELETE',
-      pathParameters: {
-        itemId: 'id1',
-      },
+      httpMethod: 'GET',
     };
 
     // Invoke the handler
     const result = await lambda.handle(event);
 
     const expectedResult = {
-      statusCode: 204,
+      statusCode: 200,
+      body: JSON.stringify(items),
     };
 
     // Expect dynamodb to have been called
