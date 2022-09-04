@@ -1,10 +1,10 @@
-// Import all functions from find-item.js
-const lambda = require('../../../handlers/item-find');
+// Import all functions from delete-item.js
+const lambda = require('../item-delete');
 // Import dynamodb from aws-sdk
 const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
 
 // This includes all tests for FindItem handler
-describe('handler::FindItem', () => {
+describe('handler::DeleteItem', () => {
   let sendSpy;
 
   // Test one-time setup and teardown, see more in https://jestjs.io/docs/en/setup-teardown
@@ -24,14 +24,14 @@ describe('handler::FindItem', () => {
     sendSpy.mockRestore();
   });
 
-  it('should return item when found', async () => {
+  it('should return status code 204 when successful', async () => {
     const item = { id: 'id1' };
 
     // Return the specified value whenever the spied function is called
-    sendSpy.mockResolvedValue({ Item: item });
+    sendSpy.mockResolvedValue({});
 
     const event = {
-      httpMethod: 'GET',
+      httpMethod: 'DELETE',
       pathParameters: {
         itemId: 'id1',
       },
@@ -41,34 +41,7 @@ describe('handler::FindItem', () => {
     const result = await lambda.handle(event);
 
     const expectedResult = {
-      statusCode: 200,
-      body: JSON.stringify(item),
-    };
-
-    // Expect dynamodb to have been called
-    expect(sendSpy).toHaveBeenCalledTimes(1);
-    // Compare the result with the expected result
-    expect(result).toEqual(expectedResult);
-  });
-
-  it('should return status code 404 when not found', async () => {
-    const item = { id: 'id1' };
-
-    // Return the specified value whenever the spied function is called
-    sendSpy.mockReturnValue(Promise.resolve({}));
-
-    const event = {
-      httpMethod: 'GET',
-      pathParameters: {
-        itemId: 'id1',
-      },
-    };
-
-    // Invoke the handler
-    const result = await lambda.handle(event);
-
-    const expectedResult = {
-      statusCode: 404,
+      statusCode: 204,
     };
 
     // Expect dynamodb to have been called

@@ -1,5 +1,5 @@
 // Import all functions from update-item.js
-const lambda = require('../../../handlers/item-update');
+const lambda = require('../item-update');
 // Import dynamodb from aws-sdk
 const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
 const { ConditionalCheckFailedException } = require('@aws-sdk/client-dynamodb');
