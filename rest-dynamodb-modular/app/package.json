@@ -6,7 +6,8 @@
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "3.163.0",
-    "@aws-sdk/lib-dynamodb": "3.163.0"
+    "@aws-sdk/lib-dynamodb": "3.163.0",
+    "joi": "17.6.0"
   },
   "devDependencies": {
     "jest": "29.0.2"

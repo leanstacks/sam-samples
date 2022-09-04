@@ -2,6 +2,8 @@ const { DynamoDBDocumentClient, PutCommand } = require('@aws-sdk/lib-dynamodb');
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const crypto = require('crypto');
 
+const { createItem: validator } = require('../validators/item-validator');
+
 // Create clients and set shared const values outside of the handler function.
 
 // Get environment variable values
@@ -31,8 +33,11 @@ exports.handle = async (event) => {
   // all log statements are written to CloudWatch
   console.log(`CreateItem::handle::event::${JSON.stringify(event)}`);
 
-  // parse the request
-  const { name } = JSON.parse(event.body);
+  // validate the event
+  const validatedEvent = validator(event);
+
+  // parse the request event
+  const { name } = validatedEvent;
 
   // create a new item in the table
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property
@@ -50,6 +55,7 @@ exports.handle = async (event) => {
     }),
   );
 
+  // format the response
   const response = {
     statusCode: 201,
     body: JSON.stringify(itemObj),
