@@ -1,65 +1,41 @@
-const { DynamoDBDocumentClient, PutCommand } = require('@aws-sdk/lib-dynamodb');
-const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const crypto = require('crypto');
-
-const { createItem: validator } = require('../validators/item-validator');
-
-// Create clients and set shared const values outside of the handler function.
-
-// Get environment variable values
-const TABLE_NAME = process.env.SAMPLE_TABLE;
-const AWS_REGION = process.env.AWS_REGION;
-
-// Create an AWS DynamoDBDocumentClient
-// configure the AWS DynamoDBDocumentClient
-const marshallOptions = {
-  convertEmptyValues: false,
-  removeUndefinedValues: true,
-  convertClassInstanceToMap: false,
-};
-const unmarshallOptions = {
-  wrapNumbers: false,
-};
-const translateConfig = { marshallOptions, unmarshallOptions };
-const dynamoDb = DynamoDBDocumentClient.from(
-  new DynamoDBClient({ region: AWS_REGION }),
-  translateConfig,
-);
+const { validateItemCreate: validate } = require('../validators/item-validator');
+const itemService = require('../services/item-service');
 
 /**
- * A simple handler function which creates an item in DynamoDB
+ * A Lambda handler function which creates an item in DynamoDB.
+ * @param {Object} event The Lambda event. An API Gateway event.
+ * @returns {Promise} A Promise which resolves to a Lambda function response
+ * if successful, otherwise rejects with an error.
  */
 exports.handle = async (event) => {
   // all log statements are written to CloudWatch
   console.log(`CreateItem::handle::event::${JSON.stringify(event)}`);
 
-  // validate the event
-  const validatedEvent = validator(event);
+  let response;
+  try {
+    // validate the event
+    const validatedEvent = validate(event);
 
-  // parse the request event
-  const { name } = validatedEvent;
+    // parse the request event
+    const itemToCreate = validatedEvent.body;
 
-  // create a new item in the table
-  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property
-  const id = crypto.randomBytes(8).toString('hex');
-  const itemObj = {
-    id,
-    name,
-    createdAt: new Date().toISOString(),
-  };
-  await dynamoDb.send(
-    new PutCommand({
-      TableName: TABLE_NAME,
-      Item: itemObj,
-      ConditionExpression: 'attribute_not_exists(id)',
-    }),
-  );
+    // invoke business service(s) to perform logic
+    const item = await itemService.create(itemToCreate);
 
-  // format the response
-  const response = {
-    statusCode: 201,
-    body: JSON.stringify(itemObj),
-  };
+    // format the response
+    response = {
+      statusCode: 201,
+      body: JSON.stringify(item),
+    };
+  } catch (error) {
+    response = {
+      statusCode: error.statusCode || 500,
+      body: JSON.stringify({
+        name: error.name,
+        message: error.message,
+      }),
+    };
+  }
 
   // all log statements are written to CloudWatch
   console.log(

@@ -3,11 +3,12 @@ const Joi = require('joi');
 const validator = require('./validator');
 
 /**
- *
+ * Validates the create item Lambda function event. This is an API Gateway event object.
  * @param {Object} event The Lambda function handler event.
- * @returns
+ * @returns {Object} A validated event object if successful; otherwise throws a ValidationError.
+ * @see {@link validator.validate} for further information.
  */
-exports.createItem = (event) => {
+exports.validateItemCreate = (event) => {
   // prepare event for validation
   const aEvent = {
     ...event,
