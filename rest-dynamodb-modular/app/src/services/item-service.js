@@ -8,6 +8,12 @@ const TABLE_NAME = process.env.SAMPLE_TABLE;
 
 const dbClient = dynamoDb.getDocumentClient();
 
+/**
+ * Create and store an item.
+ * @param {Object} item An item object to be created.
+ * @returns {Promise} A Promise which resolves to the created item if successful,
+ * otherwise rejects with an error.
+ */
 exports.create = async (item) => {
   console.log('ItemService::create');
 
