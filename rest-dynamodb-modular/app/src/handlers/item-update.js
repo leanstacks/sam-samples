@@ -1,85 +1,47 @@
-const { DynamoDBDocumentClient, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
-const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-
-// Create clients and set shared const values outside of the handler function.
-
-// Get environment variable values
-const TABLE_NAME = process.env.SAMPLE_TABLE;
-const AWS_REGION = process.env.AWS_REGION;
-
-// Create an AWS DynamoDBDocumentClient
-// configure the AWS DynamoDBDocumentClient
-const marshallOptions = {
-  convertEmptyValues: false,
-  removeUndefinedValues: true,
-  convertClassInstanceToMap: false,
-};
-const unmarshallOptions = {
-  wrapNumbers: false,
-};
-const translateConfig = { marshallOptions, unmarshallOptions };
-const dynamoDb = DynamoDBDocumentClient.from(
-  new DynamoDBClient({ region: AWS_REGION }),
-  translateConfig,
-);
+const { validateItemUpdate: validate } = require('../validators/item-validator');
+const itemService = require('../services/item-service');
 
 /**
- * A simple handler function which creates an item in DynamoDB
+ * A Lambda handler function which updates an item in DynamoDB.
+ * @param {Object} event The Lambda event. An API Gateway event.
+ * @returns {Promise} A Promise which resolves to a Lambda function response
+ * if successful, otherwise rejects with an error.
  */
 exports.handle = async (event) => {
+  // all log statements are written to CloudWatch
+  console.log(`UpdateItem::handle::event::${JSON.stringify(event)}`);
+
   let response;
-
   try {
-    // all log statements are written to CloudWatch
-    console.log(`UpdateItem::handle::event::${JSON.stringify(event)}`);
+    // validate the event
+    const validatedEvent = validate(event);
 
-    // Get id from pathParameters from APIGateway Lambda event.
-    // Named in template.yaml with `Path` configuration of `/{itemId}`
-    const { itemId } = event.pathParameters;
     // parse the request
-    const { name } = JSON.parse(event.body);
+    const { itemId } = validatedEvent.pathParameters;
+    const itemToUpdate = validatedEvent.body;
 
-    // create a new item in the table
-    // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property
-    const updatedAt = new Date().toISOString();
+    // invoke business service(s) to perform logic
+    const item = await itemService.update(itemId, itemToUpdate);
 
-    const data = await dynamoDb.send(
-      new UpdateCommand({
-        TableName: TABLE_NAME,
-        Key: { id: itemId },
-        UpdateExpression: 'set #nm = :nm, updatedAt = :ua',
-        ConditionExpression: 'id = :iid',
-        ExpressionAttributeNames: {
-          '#nm': 'name',
-        },
-        ExpressionAttributeValues: {
-          ':iid': itemId,
-          ':nm': name,
-          ':ua': updatedAt,
-        },
-        ReturnValues: 'ALL_NEW',
-      }),
-    );
-
-    response = {
-      statusCode: 200,
-      body: JSON.stringify(data.Attributes),
-    };
-  } catch (err) {
-    console.error(`Error in UpdateItem handler. Details: ${err}`);
-    response = {
-      statusCode: 500,
-      body: JSON.stringify({
-        message: 'Unable to update item.',
-      }),
-    };
-
-    switch (err.name) {
-      case 'ConditionalCheckFailedException':
-        response.statusCode = 404;
-        delete response.body;
-        break;
+    // format the response
+    if (item) {
+      response = {
+        statusCode: 200,
+        body: JSON.stringify(item),
+      };
+    } else {
+      response = {
+        statusCode: 404,
+      };
     }
+  } catch (error) {
+    response = {
+      statusCode: error.statusCode || 500,
+      body: JSON.stringify({
+        name: error.name,
+        message: error.message,
+      }),
+    };
   }
 
   // all log statements are written to CloudWatch

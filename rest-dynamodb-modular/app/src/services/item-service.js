@@ -1,5 +1,11 @@
 const crypto = require('crypto');
-const { DeleteCommand, GetCommand, PutCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
+const {
+  DeleteCommand,
+  GetCommand,
+  PutCommand,
+  ScanCommand,
+  UpdateCommand,
+} = require('@aws-sdk/lib-dynamodb');
 
 const ValidationError = require('../errors/validation-error');
 const dynamoDb = require('../utils/dynamodb');
@@ -46,6 +52,52 @@ exports.create = async (item) => {
       throw new ValidationError('The ID value is in use. Try again.');
     }
     console.error('Error caught creating Item. Detail: ', error);
+    throw error;
+  }
+};
+
+/**
+ * Updates an existing item in the DynamoDB table.
+ * @param {string} id An item identifier.
+ * @param {Object} item An item object containing updated attributes.
+ * @returns {Promise} A Promise which resolves to the updated item if successful,
+ * `null` if not found; otherwise rejects with an error.
+ */
+exports.update = async (id, item) => {
+  console.log('ItemService::update');
+
+  try {
+    // prepare the attributes to be updated
+    const { name } = item;
+    const updatedAt = new Date().toISOString();
+
+    // update an item in the table
+    // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/updateitemcommandinput.html
+    const data = await dbClient.send(
+      new UpdateCommand({
+        TableName: TABLE_NAME,
+        Key: { id },
+        UpdateExpression: 'set #nm = :nm, updatedAt = :ua',
+        ConditionExpression: 'id = :iid',
+        ExpressionAttributeNames: {
+          '#nm': 'name',
+        },
+        ExpressionAttributeValues: {
+          ':iid': id,
+          ':nm': name,
+          ':ua': updatedAt,
+        },
+        ReturnValues: 'ALL_NEW',
+      }),
+    );
+
+    return data.Attributes;
+  } catch (error) {
+    if (error.name === 'ConditionalCheckFailedException') {
+      // not found
+      return null;
+    }
+    console.error('Error caught updating Item. Detail: ', error);
     throw error;
   }
 };
