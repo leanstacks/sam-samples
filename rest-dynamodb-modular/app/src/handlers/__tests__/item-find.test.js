@@ -106,7 +106,7 @@ describe('FindItem::handle', () => {
       body: JSON.stringify({ name: 'Error', message: 'test' }),
     };
 
-    // Expect dynamodb to have been called
+    // Expect the service to have been called
     expect(itemService.find).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
     expect(result).toEqual(expectedResult);

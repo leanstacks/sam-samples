@@ -19,3 +19,7 @@ exports.savedItemCollection = [
     updatedAt: '2022-09-06T15:14:02.575Z',
   },
 ];
+
+exports.unsavedItem = {
+  name: 'Bob',
+};
