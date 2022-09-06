@@ -16,7 +16,7 @@ exports.handle = async (event) => {
     // validate the event
     const validatedEvent = validate(event);
 
-    // parse the request event
+    // parse the event
     const itemToCreate = validatedEvent.body;
 
     // invoke business service(s) to perform logic

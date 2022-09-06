@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { DeleteCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
 
 const ValidationError = require('../errors/validation-error');
 const dynamoDb = require('../utils/dynamodb');
@@ -29,7 +29,7 @@ exports.create = async (item) => {
     };
 
     // create a new item in the table
-    // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property
+    // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/putitemcommandinput.html
     await dbClient.send(
       new PutCommand({
         TableName: TABLE_NAME,
@@ -48,4 +48,25 @@ exports.create = async (item) => {
     console.error('Error caught creating Item. Detail: ', error);
     throw error;
   }
+};
+
+/**
+ * Deletes an item, removing it from the DynamoDB table.
+ * @param {string} id An item identifier.
+ * @returns {Promise} A Promise which resolves to `null` if successful,
+ * otherwise rejects with an error.
+ */
+exports.delete = async (id) => {
+  console.log('ItemService::delete');
+
+  // delete an item from the table
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/deleteitemcommandinput.html
+  await dbClient.send(
+    new DeleteCommand({
+      TableName: TABLE_NAME,
+      Key: {
+        id,
+      },
+    }),
+  );
 };
