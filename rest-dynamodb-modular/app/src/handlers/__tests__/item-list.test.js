@@ -9,7 +9,7 @@ jest.mock('../../services/item-service');
 const itemFixtures = require('../../__fixtures__/items');
 
 // This includes all tests for ListItems handler
-describe('handler::ListItems', () => {
+describe('ListItems::handle', () => {
   afterEach(() => {
     itemService.list.mockClear();
   });

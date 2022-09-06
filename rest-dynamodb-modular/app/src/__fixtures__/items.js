@@ -1,3 +1,10 @@
+exports.savedItem = {
+  id: 'a1',
+  name: 'Bob',
+  createdAt: '2022-09-06T10:13:48.010Z',
+  updatedAt: '2022-09-06T12:14:02.575Z',
+};
+
 exports.savedItemCollection = [
   {
     id: 'a1',

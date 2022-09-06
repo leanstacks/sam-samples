@@ -1,40 +1,28 @@
-// Import all functions from find-item.js
+// import module to be tested
 const lambda = require('../item-find');
-// Import dynamodb from aws-sdk
-const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
+
+// import modules to be mocked
+const itemService = require('../../services/item-service');
+jest.mock('../../services/item-service');
+
+// import test fixtures
+const itemFixtures = require('../../__fixtures__/items');
 
 // This includes all tests for FindItem handler
-describe('handler::FindItem', () => {
-  let sendSpy;
-
-  // Test one-time setup and teardown, see more in https://jestjs.io/docs/en/setup-teardown
-  beforeAll(() => {
-    // Mock dynamodb
-    // https://jestjs.io/docs/jest-object#jestspyonobject-methodname
-    sendSpy = jest.spyOn(DynamoDBDocumentClient.prototype, 'send');
-  });
-
-  // Reset mocks to their original state
+describe('FindItem::handle', () => {
   afterEach(() => {
-    sendSpy.mockReset();
+    itemService.find.mockClear();
   });
 
-  // Clean up mocks
-  afterAll(() => {
-    sendSpy.mockRestore();
-  });
-
-  it('should return item when found', async () => {
-    const item = { id: 'id1' };
-
-    // Return the specified value whenever the spied function is called
-    sendSpy.mockResolvedValue({ Item: item });
+  it('should return an item when successful', async () => {
+    itemService.find.mockResolvedValueOnce(itemFixtures.savedItem);
 
     const event = {
       httpMethod: 'GET',
       pathParameters: {
-        itemId: 'id1',
+        itemId: 'a1',
       },
+      body: null,
     };
 
     // Invoke the handler
@@ -42,26 +30,24 @@ describe('handler::FindItem', () => {
 
     const expectedResult = {
       statusCode: 200,
-      body: JSON.stringify(item),
+      body: JSON.stringify(itemFixtures.savedItem),
     };
 
     // Expect dynamodb to have been called
-    expect(sendSpy).toHaveBeenCalledTimes(1);
+    expect(itemService.find).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
     expect(result).toEqual(expectedResult);
   });
 
-  it('should return status code 404 when not found', async () => {
-    const item = { id: 'id1' };
-
-    // Return the specified value whenever the spied function is called
-    sendSpy.mockReturnValue(Promise.resolve({}));
+  it('should return statusCode 404 when not found', async () => {
+    itemService.find.mockResolvedValueOnce(null);
 
     const event = {
       httpMethod: 'GET',
       pathParameters: {
-        itemId: 'id1',
+        itemId: 'a1',
       },
+      body: null,
     };
 
     // Invoke the handler
@@ -72,7 +58,56 @@ describe('handler::FindItem', () => {
     };
 
     // Expect dynamodb to have been called
-    expect(sendSpy).toHaveBeenCalledTimes(1);
+    expect(itemService.find).toHaveBeenCalledTimes(1);
+    // Compare the result with the expected result
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('should return statusCode 400 when validation error occurs', async () => {
+    const event = {
+      httpMethod: 'GET',
+      pathParameters: {},
+      body: null,
+    };
+
+    // Invoke the handler
+    const result = await lambda.handle(event);
+
+    const expectedResult = {
+      statusCode: 400,
+      body: JSON.stringify({
+        name: 'ValidationError',
+        message: '"pathParameters.itemId" is required',
+      }),
+    };
+
+    // Expect dynamodb to have been called
+    expect(itemService.find).toHaveBeenCalledTimes(0);
+    // Compare the result with the expected result
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('should return statusCode 500 when an error occurs', async () => {
+    itemService.find.mockRejectedValueOnce(new Error('test'));
+
+    const event = {
+      httpMethod: 'GET',
+      pathParameters: {
+        itemId: 'a1',
+      },
+      body: null,
+    };
+
+    // Invoke the handler
+    const result = await lambda.handle(event);
+
+    const expectedResult = {
+      statusCode: 500,
+      body: JSON.stringify({ name: 'Error', message: 'test' }),
+    };
+
+    // Expect dynamodb to have been called
+    expect(itemService.find).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
     expect(result).toEqual(expectedResult);
   });
