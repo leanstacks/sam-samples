@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { DeleteCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { DeleteCommand, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
 
 const ValidationError = require('../errors/validation-error');
 const dynamoDb = require('../utils/dynamodb');
@@ -69,4 +69,27 @@ exports.delete = async (id) => {
       },
     }),
   );
+};
+
+/**
+ * Finds an item in the DynamoDB table.
+ * @param {string} id An item identifier.
+ * @returns {Promise} A Promise which resolves to the item if successful,
+ * `null` if not found, otherwise rejects with an error.
+ */
+exports.find = async (id) => {
+  console.log('ItemService::find');
+
+  // find an item in the table
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/getitemcommandinput.html
+  const data = await dbClient.send(
+    new GetCommand({
+      TableName: TABLE_NAME,
+      Key: {
+        id,
+      },
+    }),
+  );
+
+  return data.Item;
 };
