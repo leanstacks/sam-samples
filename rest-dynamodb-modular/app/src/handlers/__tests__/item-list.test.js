@@ -1,37 +1,25 @@
-// Import all functions from list-items.js
+// import module to be tested
 const lambda = require('../item-list');
-// Import dynamodb from aws-sdk
-const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
+
+// import modules to be mocked
+const itemService = require('../../services/item-service');
+jest.mock('../../services/item-service');
+
+// import test fixtures
+const itemFixtures = require('../../__fixtures__/items');
 
 // This includes all tests for ListItems handler
 describe('handler::ListItems', () => {
-  let sendSpy;
-
-  // Test one-time setup and teardown, see more in https://jestjs.io/docs/en/setup-teardown
-  beforeAll(() => {
-    // Mock dynamodb
-    // https://jestjs.io/docs/jest-object#jestspyonobject-methodname
-    sendSpy = jest.spyOn(DynamoDBDocumentClient.prototype, 'send');
-  });
-
-  // Reset mocks to their original state
   afterEach(() => {
-    sendSpy.mockReset();
+    itemService.list.mockClear();
   });
 
-  // Clean up mocks
-  afterAll(() => {
-    sendSpy.mockRestore();
-  });
-
-  it('should return a list of items', async () => {
-    const items = [{ id: 'id1' }, { id: 'id2' }];
-
-    // Return the specified value whenever the spied function is called
-    sendSpy.mockResolvedValue({ Items: items });
+  it('should return a list of items when successful', async () => {
+    itemService.list.mockResolvedValueOnce(itemFixtures.savedItemCollection);
 
     const event = {
       httpMethod: 'GET',
+      body: null,
     };
 
     // Invoke the handler
@@ -39,11 +27,33 @@ describe('handler::ListItems', () => {
 
     const expectedResult = {
       statusCode: 200,
-      body: JSON.stringify(items),
+      body: JSON.stringify(itemFixtures.savedItemCollection),
     };
 
     // Expect dynamodb to have been called
-    expect(sendSpy).toHaveBeenCalledTimes(1);
+    expect(itemService.list).toHaveBeenCalledTimes(1);
+    // Compare the result with the expected result
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('should return statusCode 500 when an error occurs', async () => {
+    itemService.list.mockRejectedValueOnce(new Error('test'));
+
+    const event = {
+      httpMethod: 'GET',
+      body: null,
+    };
+
+    // Invoke the handler
+    const result = await lambda.handle(event);
+
+    const expectedResult = {
+      statusCode: 500,
+      body: JSON.stringify({ name: 'Error', message: 'test' }),
+    };
+
+    // Expect dynamodb to have been called
+    expect(itemService.list).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
     expect(result).toEqual(expectedResult);
   });

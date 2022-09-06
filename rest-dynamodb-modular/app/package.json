@@ -20,6 +20,6 @@
     "start:local:build": "nodemon --exec sam build --template ../template.yaml --build-dir ../.aws-sam",
     "start:local": "run-s start:local:docker start:local:table start:local:build",
     "stop:local": "docker compose down",
-    "test": "jest --silent --coverage"
+    "test": "jest --silent --coverage --verbose"
   }
 }
