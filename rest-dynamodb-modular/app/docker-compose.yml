@@ -1,0 +1,13 @@
+name: sam-samples
+
+services:
+  dynamodb:
+    image: amazon/dynamodb-local
+    networks:
+      - sam-samples-network
+    ports:
+      - '8000:8000'
+
+networks:
+  sam-samples-network:
+    name: sam-samples
