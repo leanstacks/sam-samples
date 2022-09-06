@@ -76,3 +76,20 @@ exports.validateItemFind = (event) => {
   // perform validation; return validated event or throw error
   return validator.validate(schema, aEvent);
 };
+
+/**
+ * Validates the list item Lambda function event. This is an API Gateway event object.
+ * @param {Object} event The Lambda function handler event.
+ * @returns {Object} A validated event object if successful; otherwise throws a ValidationError.
+ * @see {@link validator.validate} for further information.
+ */
+exports.validateItemList = (event) => {
+  // format event for validation
+  const aEvent = formatEvent(event);
+
+  // define the validation schema
+  const schema = Joi.object();
+
+  // perform validation; return validated event or throw error
+  return validator.validate(schema, aEvent);
+};

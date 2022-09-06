@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { DeleteCommand, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { DeleteCommand, GetCommand, PutCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
 
 const ValidationError = require('../errors/validation-error');
 const dynamoDb = require('../utils/dynamodb');
@@ -92,4 +92,23 @@ exports.find = async (id) => {
   );
 
   return data.Item;
+};
+
+/**
+ * Lists items in the DynamoDB table.
+ * @returns {Promise} A Promise which resolves to a collection of items
+ * if successful, otherwise rejects with an error.
+ */
+exports.list = async () => {
+  console.log('ItemService::list');
+
+  // scan the table, retrieving a list of all items up to the maximum allowed by DynamoDB scan
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/scancommandinput.html
+  const data = await dbClient.send(
+    new ScanCommand({
+      TableName: TABLE_NAME,
+    }),
+  );
+
+  return data.Items;
 };
