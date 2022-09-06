@@ -30,7 +30,7 @@ describe('CreateItem::handle', function () {
       body: JSON.stringify(itemFixtures.savedItem),
     };
 
-    // Expect dynamodb to have been called
+    // Expect the service to have been called
     expect(itemService.create).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
     expect(result).toEqual(expectedResult);

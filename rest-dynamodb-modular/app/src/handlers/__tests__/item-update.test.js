@@ -1,75 +1,116 @@
-// Import all functions from update-item.js
+// import module to be tested
 const lambda = require('../item-update');
-// Import dynamodb from aws-sdk
-const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
-const { ConditionalCheckFailedException } = require('@aws-sdk/client-dynamodb');
 
-// This includes all tests for CreateItem handler
-describe('handler::UpdateItem', function () {
-  let sendSpy;
+//import modules to be mocked
+const itemService = require('../../services/item-service');
+jest.mock('../../services/item-service');
 
-  // Test one-time setup and teardown, see more in https://jestjs.io/docs/en/setup-teardown
-  beforeAll(() => {
-    // Mock dynamodb
-    // https://jestjs.io/docs/jest-object#jestspyonobject-methodname
-    sendSpy = jest.spyOn(DynamoDBDocumentClient.prototype, 'send');
-  });
+// import test fixtures
+const itemFixtures = require('../../__fixtures__/items');
 
-  // Reset mocks to their original state
+// This includes all tests for UpdateItem handler
+describe('UpdateItem::handle', function () {
   afterEach(() => {
-    sendSpy.mockReset();
+    itemService.update.mockClear();
   });
 
-  // Clean up mocks
-  afterAll(() => {
-    sendSpy.mockRestore();
-  });
-
-  it('should update an item', async () => {
-    const returnedItem = { Attributes: { id: 'id1', name: 'name1' } };
-
-    // Return the specified value whenever the spied put function is called
-    sendSpy.mockResolvedValue(returnedItem);
+  it('should return updated item when successful', async () => {
+    itemService.update.mockResolvedValueOnce(itemFixtures.savedItem);
 
     const event = {
       httpMethod: 'PUT',
       pathParameters: {
         itemId: 'id1',
       },
-      body: '{"name": "name1"}',
+      body: JSON.stringify(itemFixtures.savedItem),
     };
 
     // Invoke the handler
     const result = await lambda.handle(event);
 
-    // Expect dynamodb to have been called
-    expect(sendSpy).toHaveBeenCalledTimes(1);
+    const expectedResult = {
+      statusCode: 200,
+      body: JSON.stringify(itemFixtures.savedItem),
+    };
+
+    // Expect the service to have been called
+    expect(itemService.update).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
-    expect(result.body).toMatch(/name1/);
-    expect(result.statusCode).toEqual(200);
+    expect(result).toEqual(expectedResult);
   });
 
   it('should return status code 404 when not found', async () => {
-    const returnedItem = { Attributes: { id: 'id1', name: 'name1' } };
-
-    // Return the specified value whenever the spied put function is called
-    sendSpy.mockRejectedValue(new ConditionalCheckFailedException());
+    itemService.update.mockResolvedValueOnce(null);
 
     const event = {
       httpMethod: 'PUT',
       pathParameters: {
         itemId: 'id1',
       },
-      body: '{"name": "name1"}',
+      body: JSON.stringify(itemFixtures.savedItem),
     };
 
     // Invoke the handler
     const result = await lambda.handle(event);
 
-    // Expect dynamodb to have been called
-    expect(sendSpy).toHaveBeenCalledTimes(1);
+    const expectedResult = {
+      statusCode: 404,
+    };
+
+    // Expect the service to have been called
+    expect(itemService.update).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
-    expect(result.body).toBeUndefined();
-    expect(result.statusCode).toEqual(404);
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('should return statusCode 400 when validation error occurs', async () => {
+    const event = {
+      httpMethod: 'PUT',
+      pathParameters: {
+        itemId: 'id1',
+      },
+      body: JSON.stringify({}),
+    };
+
+    // Invoke the handler
+    const result = await lambda.handle(event);
+
+    const expectedResult = {
+      statusCode: 400,
+      body: JSON.stringify({
+        name: 'ValidationError',
+        message: '"body.name" is required',
+      }),
+    };
+
+    // Expect the service to have been called
+    expect(itemService.update).toHaveBeenCalledTimes(0);
+    // Compare the result with the expected result
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('should return statusCode 500 when an error occurs', async () => {
+    itemService.update.mockRejectedValueOnce(new Error('test'));
+
+    const event = {
+      httpMethod: 'PUT',
+      pathParameters: {
+        itemId: 'id1',
+      },
+      body: JSON.stringify(itemFixtures.savedItem),
+    };
+
+    // Invoke the handler
+    const result = await lambda.handle(event);
+
+    const expectedResult = {
+      statusCode: 500,
+      body: JSON.stringify({ name: 'Error', message: 'test' }),
+    };
+
+    // Expect the service to have been called
+    expect(itemService.update).toHaveBeenCalledTimes(1);
+    // Compare the result with the expected result
+    expect(result).toEqual(expectedResult);
   });
 });

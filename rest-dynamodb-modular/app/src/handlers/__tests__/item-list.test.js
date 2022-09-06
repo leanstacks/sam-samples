@@ -30,7 +30,7 @@ describe('ListItems::handle', () => {
       body: JSON.stringify(itemFixtures.savedItemCollection),
     };
 
-    // Expect dynamodb to have been called
+    // Expect the service to have been called
     expect(itemService.list).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
     expect(result).toEqual(expectedResult);
@@ -52,7 +52,7 @@ describe('ListItems::handle', () => {
       body: JSON.stringify({ name: 'Error', message: 'test' }),
     };
 
-    // Expect dynamodb to have been called
+    // Expect the service to have been called
     expect(itemService.list).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
     expect(result).toEqual(expectedResult);

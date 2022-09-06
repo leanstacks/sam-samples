@@ -33,7 +33,7 @@ describe('FindItem::handle', () => {
       body: JSON.stringify(itemFixtures.savedItem),
     };
 
-    // Expect dynamodb to have been called
+    // Expect the service to have been called
     expect(itemService.find).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
     expect(result).toEqual(expectedResult);
@@ -57,7 +57,7 @@ describe('FindItem::handle', () => {
       statusCode: 404,
     };
 
-    // Expect dynamodb to have been called
+    // Expect the service to have been called
     expect(itemService.find).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
     expect(result).toEqual(expectedResult);
@@ -81,7 +81,7 @@ describe('FindItem::handle', () => {
       }),
     };
 
-    // Expect dynamodb to have been called
+    // Expect the service to have been called
     expect(itemService.find).toHaveBeenCalledTimes(0);
     // Compare the result with the expected result
     expect(result).toEqual(expectedResult);
