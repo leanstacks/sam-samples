@@ -1,18 +1,9 @@
 const crypto = require('crypto');
-const {
-  DeleteCommand,
-  GetCommand,
-  PutCommand,
-  ScanCommand,
-  UpdateCommand,
-} = require('@aws-sdk/lib-dynamodb');
 
 const ValidationError = require('../errors/validation-error');
 const dynamoDb = require('../utils/dynamodb');
 
 const TABLE_NAME = process.env.SAMPLE_TABLE;
-
-const dbClient = dynamoDb.getDocumentClient();
 
 /**
  * Create and store an item.
@@ -36,13 +27,11 @@ exports.create = async (item) => {
 
     // create a new item in the table
     // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/putitemcommandinput.html
-    await dbClient.send(
-      new PutCommand({
-        TableName: TABLE_NAME,
-        Item: itemObj,
-        ConditionExpression: 'attribute_not_exists(id)',
-      }),
-    );
+    await dynamoDb.put({
+      TableName: TABLE_NAME,
+      Item: itemObj,
+      ConditionExpression: 'attribute_not_exists(id)',
+    });
 
     // PutCommand does not return the stored item; DynamoDB does not modify the item being stored
     // return the composed item
@@ -73,23 +62,21 @@ exports.update = async (id, item) => {
 
     // update an item in the table
     // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/updateitemcommandinput.html
-    const data = await dbClient.send(
-      new UpdateCommand({
-        TableName: TABLE_NAME,
-        Key: { id },
-        UpdateExpression: 'set #nm = :nm, updatedAt = :ua',
-        ConditionExpression: 'id = :iid',
-        ExpressionAttributeNames: {
-          '#nm': 'name',
-        },
-        ExpressionAttributeValues: {
-          ':iid': id,
-          ':nm': name,
-          ':ua': updatedAt,
-        },
-        ReturnValues: 'ALL_NEW',
-      }),
-    );
+    const data = await dynamoDb.update({
+      TableName: TABLE_NAME,
+      Key: { id },
+      UpdateExpression: 'set #nm = :nm, updatedAt = :ua',
+      ConditionExpression: 'id = :iid',
+      ExpressionAttributeNames: {
+        '#nm': 'name',
+      },
+      ExpressionAttributeValues: {
+        ':iid': id,
+        ':nm': name,
+        ':ua': updatedAt,
+      },
+      ReturnValues: 'ALL_NEW',
+    });
 
     return data.Attributes;
   } catch (error) {
@@ -113,14 +100,12 @@ exports.delete = async (id) => {
 
   // delete an item from the table
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/deleteitemcommandinput.html
-  await dbClient.send(
-    new DeleteCommand({
-      TableName: TABLE_NAME,
-      Key: {
-        id,
-      },
-    }),
-  );
+  await dynamoDb.delete({
+    TableName: TABLE_NAME,
+    Key: {
+      id,
+    },
+  });
 };
 
 /**
@@ -134,14 +119,12 @@ exports.find = async (id) => {
 
   // find an item in the table
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/getitemcommandinput.html
-  const data = await dbClient.send(
-    new GetCommand({
-      TableName: TABLE_NAME,
-      Key: {
-        id,
-      },
-    }),
-  );
+  const data = await dynamoDb.get({
+    TableName: TABLE_NAME,
+    Key: {
+      id,
+    },
+  });
 
   return data.Item;
 };
@@ -156,11 +139,9 @@ exports.list = async () => {
 
   // scan the table, retrieving a list of all items up to the maximum allowed by DynamoDB scan
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/scancommandinput.html
-  const data = await dbClient.send(
-    new ScanCommand({
-      TableName: TABLE_NAME,
-    }),
-  );
+  const data = await dynamoDb.scan({
+    TableName: TABLE_NAME,
+  });
 
   return data.Items;
 };
