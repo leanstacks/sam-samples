@@ -1,4 +1,11 @@
-const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
+const {
+  DynamoDBDocumentClient,
+  PutCommand,
+  UpdateCommand,
+  DeleteCommand,
+  GetCommand,
+  ScanCommand,
+} = require('@aws-sdk/lib-dynamodb');
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 
 // Get environment variable values
@@ -37,9 +44,56 @@ const clientConfig = {
 };
 
 /**
- * Get a fully configured `DynamoDBDocumentClient` instance.
- * @returns {DynamoDBDocumentClient} A `DynamoDBDocumentClient` instance.
+ * DynamoDBDocumentClient instance.
  */
-exports.getDocumentClient = () => {
-  return DynamoDBDocumentClient.from(new DynamoDBClient(clientConfig), translateConfig);
+const client = DynamoDBDocumentClient.from(new DynamoDBClient(clientConfig), translateConfig);
+
+/**
+ * Send a `PutCommand` to DynamoDB.
+ * @param {Object} input A PutCommandInput object.
+ * @returns {Promise} A Promise which resolves to a PutCommandOutput object if successful,
+ * otherwise rejects with an error.
+ */
+exports.put = async (input) => {
+  return client.send(new PutCommand(input));
+};
+
+/**
+ * Send an `UpdateCommand` to DynamoDB.
+ * @param {Object} input An UpdateCommandInput object.
+ * @returns {Promise} A Promise which resolves to an UpdateCommandOuput object if successful,
+ * otherwise rejects with an error.
+ */
+exports.update = async (input) => {
+  return client.send(new UpdateCommand(input));
+};
+
+/**
+ * Send a `DeleteCommand` to DynamoDB.
+ * @param {Object} input A DeleteCommandInput object.
+ * @returns {Promise} A Promise which resolves to a DeleteCommandOutput object if successful,
+ * otherwise rejects with an error.
+ */
+exports.delete = async (input) => {
+  return client.send(new DeleteCommand(input));
+};
+
+/**
+ * Send a `GetCommand` to DynamoDB.
+ * @param {Object} input A GetCommandInput object.
+ * @returns {Promise} A Promise which resolves to a GetCommandOutput object if successful,
+ * otherwise rejects with an error.
+ */
+exports.get = async (input) => {
+  return client.send(new GetCommand(input));
+};
+
+/**
+ * Send a `ScanCommand` to DynamoDB.
+ * @param {Object} input A ScanCommandInput object.
+ * @returns {Promise} A Promise which resolves to a ScanCommandOutput object if successful,
+ * otherwise rejects with an error.
+ */
+exports.scan = async (input) => {
+  return client.send(new ScanCommand(input));
 };
