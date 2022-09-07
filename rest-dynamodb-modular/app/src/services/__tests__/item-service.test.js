@@ -93,3 +93,88 @@ describe('ItemService::update', () => {
     );
   });
 });
+
+describe('ItemService::delete', () => {
+  afterEach(() => {
+    dynamoDb.delete.mockClear();
+  });
+
+  it('should delete an item successfully', async () => {
+    // set up the test
+    dynamoDb.delete.mockResolvedValueOnce(null);
+
+    // perform the test
+    const result = await service.delete(itemFixtures.savedItem.id);
+
+    // assert the test results
+    expect(result).toBeUndefined();
+  });
+
+  it('should throw the Error when a problem occurs', async () => {
+    // set up the test
+    const error = new Error('test');
+    dynamoDb.delete.mockRejectedValueOnce(error);
+
+    // perform the test
+    // assert the test results
+    await expect(service.delete(itemFixtures.savedItem.id)).rejects.toThrow('test');
+  });
+});
+
+describe('ItemService::find', () => {
+  afterEach(() => {
+    dynamoDb.get.mockClear();
+  });
+
+  it('should find an item successfully', async () => {
+    // set up the test
+    dynamoDb.get.mockResolvedValueOnce({
+      Item: itemFixtures.savedItem,
+    });
+
+    // perform the test
+    const result = await service.find(itemFixtures.savedItem.id);
+
+    // assert the test results
+    expect(result).toEqual(itemFixtures.savedItem);
+  });
+
+  it('should throw the Error when a problem occurs', async () => {
+    // set up the test
+    const error = new Error('test');
+    dynamoDb.get.mockRejectedValueOnce(error);
+
+    // perform the test
+    // assert the test results
+    await expect(service.find(itemFixtures.savedItem.id)).rejects.toThrow('test');
+  });
+});
+
+describe('ItemService::list', () => {
+  afterEach(() => {
+    dynamoDb.scan.mockClear();
+  });
+
+  it('should list items successfully', async () => {
+    // set up the test
+    dynamoDb.scan.mockResolvedValueOnce({
+      Items: itemFixtures.savedItemCollection,
+    });
+
+    // perform the test
+    const result = await service.list();
+
+    // assert the test results
+    expect(result).toEqual(itemFixtures.savedItemCollection);
+  });
+
+  it('should throw the Error when a problem occurs', async () => {
+    // set up the test
+    const error = new Error('test');
+    dynamoDb.scan.mockRejectedValueOnce(error);
+
+    // perform the test
+    // assert the test results
+    await expect(service.list()).rejects.toThrow('test');
+  });
+});
