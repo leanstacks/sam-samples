@@ -15,6 +15,15 @@ This project contains source code and supporting files for a serverless applicat
 
 The application uses several AWS resources, including Lambda functions, an API Gateway API, and Amazon DynamoDB tables. These resources are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
 
+## Technology Stack
+
+This sample uses the following technologies:
+
+- Node.js v16 - The foundation
+- AWS SDK v3 - AWS Services, e.g. DynamoDB
+- Joi - Validation
+- Jest - Testing
+
 ## Prerequisites
 
 The following are required to run this sample.
