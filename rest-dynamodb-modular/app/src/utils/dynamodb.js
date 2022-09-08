@@ -32,13 +32,13 @@ const unmarshallOptions = {
 /**
  * DynamoDBDocumentClient translation configiuration.
  */
-const translateConfig = { marshallOptions, unmarshallOptions };
+exports.translateConfig = { marshallOptions, unmarshallOptions };
 
 /**
  * DynamoDBClient configuration.
  * @see {@link https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/dynamodbclientconfig.html Intrface DynamoDBClientConfig}
  */
-const clientConfig = {
+exports.clientConfig = {
   endpoint: AWS_SAM_LOCAL ? LOCAL_ENDPOINT : undefined,
   region: AWS_REGION,
 };
@@ -46,7 +46,10 @@ const clientConfig = {
 /**
  * DynamoDBDocumentClient instance.
  */
-const client = DynamoDBDocumentClient.from(new DynamoDBClient(clientConfig), translateConfig);
+exports.client = DynamoDBDocumentClient.from(
+  new DynamoDBClient(this.clientConfig),
+  this.translateConfig,
+);
 
 /**
  * Send a `PutCommand` to DynamoDB.
@@ -55,7 +58,7 @@ const client = DynamoDBDocumentClient.from(new DynamoDBClient(clientConfig), tra
  * otherwise rejects with an error.
  */
 exports.put = async (input) => {
-  return client.send(new PutCommand(input));
+  return this.client.send(new PutCommand(input));
 };
 
 /**
@@ -65,7 +68,7 @@ exports.put = async (input) => {
  * otherwise rejects with an error.
  */
 exports.update = async (input) => {
-  return client.send(new UpdateCommand(input));
+  return this.client.send(new UpdateCommand(input));
 };
 
 /**
@@ -75,7 +78,7 @@ exports.update = async (input) => {
  * otherwise rejects with an error.
  */
 exports.delete = async (input) => {
-  return client.send(new DeleteCommand(input));
+  return this.client.send(new DeleteCommand(input));
 };
 
 /**
@@ -85,7 +88,7 @@ exports.delete = async (input) => {
  * otherwise rejects with an error.
  */
 exports.get = async (input) => {
-  return client.send(new GetCommand(input));
+  return this.client.send(new GetCommand(input));
 };
 
 /**
@@ -95,5 +98,5 @@ exports.get = async (input) => {
  * otherwise rejects with an error.
  */
 exports.scan = async (input) => {
-  return client.send(new ScanCommand(input));
+  return this.client.send(new ScanCommand(input));
 };
