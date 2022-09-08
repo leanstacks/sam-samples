@@ -28,9 +28,14 @@ This sample application is the introductory example for using DynamoDB. This pro
 
 The [rest-dynamodb-local](./rest-dynamodb-local/README.md) sample builds upon the `rest-dynamodb` sample. This sample demonstrates how to run the SAM application locally with DynamoDB.
 
+### rest-dynamodb-modular
+
+The [rest-dynamodb-modular](./rest-dynamodb-modular/README.md) sample illustrates how to implement REST services with a more modular code structure. This sample builds on the `rest-dynamodb-local` sample. Many of the samples in this project illustrate a particular Serverless concept and all of the logic is contained within the function handler. While this serves to illustrate the concept of the example, it is not meant to illustrate best practices when creating serverless applications.
+
 ## See Also
 
 [LEAN**STACKS**][leanstacks]  
+[LEAN**STACKS** Serverless [Framework] Samples](https://github.com/leanstacks/serverless-samples)  
 [AWS Serverless Application Model][aws-sam]  
 [AWS SAM Documentation][aws-sam-docs]  
 [AWS SAM Examples Repository][aws-sam-repos-examples]
