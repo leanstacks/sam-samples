@@ -1,0 +1,13 @@
+{
+  "name": "sam-samples-rest-middy",
+  "version": "1.0.0",
+  "repository": "https://github.com/leanstacks/sam-samples",
+  "author": "Matthew Warman <leanstacker@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@middy/core": "3.3.1",
+    "@middy/http-error-handler": "3.3.1",
+    "@middy/http-json-body-parser": "3.3.1",
+    "@middy/validator": "3.3.1"
+  }
+}

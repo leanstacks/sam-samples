@@ -32,6 +32,10 @@ The [rest-dynamodb-local](./rest-dynamodb-local/README.md) sample builds upon th
 
 The [rest-dynamodb-modular](./rest-dynamodb-modular/README.md) sample illustrates how to implement REST services with a more modular code structure. This sample builds on the `rest-dynamodb-local` sample. Many of the samples in this project illustrate a particular Serverless concept and all of the logic is contained within the function handler. While this serves to illustrate the concept of the example, it is not meant to illustrate best practices when creating serverless applications.
 
+### rest-middy
+
+The [rest-middy](./rest-middy/README.md) sample SAM application introduces the `Middy` middleware package. Middy allows you to reduce boilerplate code, moving it into reusable middlewares which you may reuse across your functions. This allows your engineers to focus on the business logic of the function rather than the non-functional code.
+
 ## See Also
 
 [LEAN**STACKS**][leanstacks]  

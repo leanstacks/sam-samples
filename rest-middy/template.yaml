@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  rest-middy
+
+  SAM Template for rest-middy
+
+Globals:
+  Function:
+    MemorySize: 128
+    Runtime: nodejs16.x
+    Timeout: 3
+
+Resources:
+  AddFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: app/
+      Handler: src/handlers/add.handle
+      Events:
+        RestApi:
+          Type: Api
+          Properties:
+            Path: /add
+            Method: post
+
+  AddWithMiddyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: app/
+      Handler: src/handlers/add-middy.handle
+      Events:
+        RestApi:
+          Type: Api
+          Properties:
+            Path: /addwithmiddy
+            Method: post
+
+Outputs:
+  RestApi:
+    Description: 'API Gateway endpoint URL'
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
