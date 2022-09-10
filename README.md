@@ -34,7 +34,7 @@ The [rest-dynamodb-modular](./rest-dynamodb-modular/README.md) sample illustrate
 
 ### rest-middy
 
-_Coming Soon..._
+The [rest-middy](./rest-middy/README.md) sample SAM application introduces the `Middy` middleware package. Middy allows you to reduce boilerplate code, moving it into reusable middlewares which you may reuse across your functions. This allows your engineers to focus on the business logic of the function rather than the non-functional code.
 
 ## See Also
 
