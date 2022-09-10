@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "02cf141b-f987-42ac-99e7-b65c9cddb5e9",
+		"name": "REST Middy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "217295"
+	},
+	"item": [
+		{
+			"name": "Add with Middy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"a\": 2,\n  \"b\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{gatewayUrl}}/addwithmiddy",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						"addwithmiddy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"a\": 1,\n  \"b\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{gatewayUrl}}/add",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						"add"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "gatewayUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
