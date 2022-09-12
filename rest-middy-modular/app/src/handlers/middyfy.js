@@ -15,6 +15,6 @@ exports.middyfy = (options) => {
   return middy()
     .use(jsonBodyParser())
     .use(validator({ eventSchema }))
-    .use(httpErrorHandler())
+    .use(httpErrorHandler({ fallbackMessage: 'Unhandled error' }))
     .handler(handler);
 };
