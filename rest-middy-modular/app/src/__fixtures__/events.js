@@ -3,7 +3,9 @@ exports.createItem = {
     'Content-Type': 'application/json',
   },
   httpMethod: 'POST',
-  body: '{"name": "name1"}',
+  body: JSON.stringify({
+    name: 'name1',
+  }),
 };
 
 exports.updateItem = {

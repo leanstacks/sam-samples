@@ -14,7 +14,7 @@ describe('UpdateItem::handle', function () {
     itemService.update.mockClear();
   });
 
-  it('should return updated item when successful', async () => {
+  it.skip('should return updated item when successful', async () => {
     itemService.update.mockResolvedValueOnce(itemFixtures.savedItem);
 
     const event = {
@@ -39,7 +39,7 @@ describe('UpdateItem::handle', function () {
     expect(result).toEqual(expectedResult);
   });
 
-  it('should return status code 404 when not found', async () => {
+  it.skip('should return status code 404 when not found', async () => {
     itemService.update.mockResolvedValueOnce(null);
 
     const event = {
@@ -63,7 +63,7 @@ describe('UpdateItem::handle', function () {
     expect(result).toEqual(expectedResult);
   });
 
-  it('should return statusCode 400 when validation error occurs', async () => {
+  it.skip('should return statusCode 400 when validation error occurs', async () => {
     const event = {
       httpMethod: 'PUT',
       pathParameters: {
@@ -89,7 +89,7 @@ describe('UpdateItem::handle', function () {
     expect(result).toEqual(expectedResult);
   });
 
-  it('should return statusCode 500 when an error occurs', async () => {
+  it.skip('should return statusCode 500 when an error occurs', async () => {
     itemService.update.mockRejectedValueOnce(new Error('test'));
 
     const event = {

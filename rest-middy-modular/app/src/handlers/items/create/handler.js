@@ -7,18 +7,12 @@ const itemService = require('../../../services/item-service');
  * if successful, otherwise rejects with an error.
  */
 exports.handler = async (event) => {
-  console.info(`createItem::event::${JSON.stringify(event)}`);
-
   const item = await itemService.create(event.body);
 
   const response = {
     statusCode: 201,
     body: JSON.stringify(item),
   };
-
-  console.info(
-    `response::${event.httpMethod}::${event.path}::${response.statusCode}::${response.body}`,
-  );
 
   return response;
 };
