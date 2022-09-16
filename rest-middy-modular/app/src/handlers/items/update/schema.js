@@ -11,5 +11,12 @@ exports.eventSchema = {
       },
       required: ['itemId'],
     },
+    body: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Full name' },
+      },
+      required: ['name'],
+    },
   },
 };
