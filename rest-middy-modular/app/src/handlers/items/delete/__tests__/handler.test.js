@@ -9,7 +9,7 @@ jest.mock('../../../../services/item-service');
 const eventFixtures = require('../../../../__fixtures__/events');
 
 // tests for DeleteItem handler
-describe('DeleteItem::handler', () => {
+describe('DeleteItem::handle', () => {
   afterEach(() => {
     itemService.delete.mockClear();
   });

@@ -9,32 +9,48 @@ jest.mock('../../../../services/item-service');
 const eventFixtures = require('../../../../__fixtures__/events');
 const itemFixtures = require('../../../../__fixtures__/items');
 
-// tests for CreateItem handler
-describe('CreateItem::handle', () => {
+// tests for FindItem handler
+describe('FindItem::handle', () => {
   afterEach(() => {
-    itemService.create.mockClear();
+    itemService.find.mockClear();
   });
 
-  it('should return createditem when successful', async () => {
-    itemService.create.mockResolvedValueOnce(itemFixtures.savedItem);
+  it('should return an item when successful', async () => {
+    itemService.find.mockResolvedValueOnce(itemFixtures.savedItem);
 
     // Invoke the handler
-    const result = await handler.handle({ ...eventFixtures.createItem });
+    const result = await handler.handle({ ...eventFixtures.findItem });
 
     const expectedResult = {
-      statusCode: 201,
+      statusCode: 200,
       body: JSON.stringify(itemFixtures.savedItem),
     };
 
     // Expect the service to have been called
-    expect(itemService.create).toHaveBeenCalledTimes(1);
+    expect(itemService.find).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
     expect(result).toEqual(expectedResult);
   });
 
-  it('should return statusCode 400 when a validation error  occurs', async () => {
-    const invalidEvent = { ...eventFixtures.createItem };
-    invalidEvent.body = JSON.stringify({});
+  it('should return statusCode 404 when not found', async () => {
+    itemService.find.mockResolvedValueOnce(null);
+
+    // Invoke the handler
+    const result = await handler.handle({ ...eventFixtures.findItem });
+
+    const expectedResult = {
+      statusCode: 404,
+    };
+
+    // Expect the service to have been called
+    expect(itemService.find).toHaveBeenCalledTimes(1);
+    // Compare the result with the expected result
+    expect(result.statusCode).toEqual(expectedResult.statusCode);
+  });
+
+  it('should return statusCode 400 when a validation error occurs', async () => {
+    const invalidEvent = { ...eventFixtures.findItem };
+    invalidEvent.pathParameters = {};
 
     // Invoke the handler
     const result = await handler.handle(invalidEvent);
@@ -44,20 +60,20 @@ describe('CreateItem::handle', () => {
     };
 
     // Expect the service to have been called
-    expect(itemService.create).toHaveBeenCalledTimes(0);
+    expect(itemService.find).toHaveBeenCalledTimes(0);
     // Compare the result with the expected result
     expect(result.statusCode).toEqual(expectedResult.statusCode);
     expect(result.body).toEqual('Event object failed validation');
   });
 
   it('should return statusCode 500 when an error occurs', async () => {
-    itemService.create.mockRejectedValueOnce(new Error());
+    itemService.find.mockRejectedValueOnce(new Error());
 
     // Invoke the handler
-    const result = await handler.handle({ ...eventFixtures.createItem });
+    const result = await handler.handle({ ...eventFixtures.findItem });
 
     // Expect the service to have been called
-    expect(itemService.create).toHaveBeenCalledTimes(1);
+    expect(itemService.find).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
     expect(result.statusCode).toEqual(500);
     expect(result.body).toEqual('Unhandled error');
