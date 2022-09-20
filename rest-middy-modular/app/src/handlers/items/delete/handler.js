@@ -7,8 +7,6 @@ const itemService = require('../../../services/item-service');
  * if successful, otherwise rejects with an error.
  */
 exports.handler = async (event) => {
-  console.log(`deleteItem::event::${JSON.stringify(event)}`);
-
   const { itemId } = event.pathParameters;
 
   await itemService.delete(itemId);
@@ -16,10 +14,6 @@ exports.handler = async (event) => {
   const response = {
     statusCode: 204,
   };
-
-  console.log(
-    `response::${event.httpMethod}::${event.path}::${response.statusCode}::${response.body}`,
-  );
 
   return response;
 };

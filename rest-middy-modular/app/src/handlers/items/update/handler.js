@@ -9,8 +9,6 @@ const itemService = require('../../../services/item-service');
  * if successful, otherwise rejects with an error.
  */
 exports.handler = async (event) => {
-  console.log(`updateItem::event::${JSON.stringify(event)}`);
-
   const item = await itemService.update(event.pathParameters.itemId, event.body);
 
   if (!item) {
@@ -21,10 +19,6 @@ exports.handler = async (event) => {
     statusCode: 200,
     body: JSON.stringify(item),
   };
-
-  console.log(
-    `response::${event.httpMethod}::${event.path}::${response.statusCode}::${response.body}`,
-  );
 
   return response;
 };
