@@ -16,12 +16,7 @@ const errorHandlerMiddleware = (opts = {}) => {
     // if response is written, do nothing
     if (request.response !== undefined) return;
 
-    const {
-      name,
-      code,
-      statusCode = options.defaultStatusCode,
-      message = options.defaultMessage,
-    } = request.error;
+    const { name, code, statusCode = options.defaultStatusCode, message } = request.error;
 
     if (typeof options.logger === 'function') {
       options.logger(`error::name::${name}::statusCode::${statusCode}::message::${message}`);
@@ -35,7 +30,7 @@ const errorHandlerMiddleware = (opts = {}) => {
         name,
         code: code ? code : statusCode,
         statusCode,
-        message,
+        message: message ? message : options.defaultMessage,
       }),
       headers: {
         ...request.response.headers,
