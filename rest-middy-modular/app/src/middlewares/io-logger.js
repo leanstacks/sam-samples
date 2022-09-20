@@ -17,7 +17,7 @@ const ioLoggerMiddleware = (opts = {}) => {
   const logResponse = (response) => {
     try {
       if (response === undefined) return;
-      logger(`response::${response.statusCode}::${response.body}`);
+      logger(`response::${response.statusCode}::${JSON.stringify(response)}`);
     } catch (e) {}
   };
 

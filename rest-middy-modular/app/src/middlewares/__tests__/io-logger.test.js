@@ -26,7 +26,9 @@ describe('IO Logger', () => {
     mw.after({ response });
 
     expect(logger).toHaveBeenCalledTimes(1);
-    expect(logger).toHaveBeenCalledWith(`response::${response.statusCode}::${response.body}`);
+    expect(logger).toHaveBeenCalledWith(
+      `response::${response.statusCode}::${JSON.stringify(response)}`,
+    );
   });
 
   it('should not log if response is undefined', () => {
@@ -47,6 +49,8 @@ describe('IO Logger', () => {
     mw.onError({ response });
 
     expect(logger).toHaveBeenCalledTimes(1);
-    expect(logger).toHaveBeenCalledWith(`response::${response.statusCode}::${response.body}`);
+    expect(logger).toHaveBeenCalledWith(
+      `response::${response.statusCode}::${JSON.stringify(response)}`,
+    );
   });
 });

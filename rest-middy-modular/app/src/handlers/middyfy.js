@@ -2,11 +2,11 @@ const middy = require('@middy/core');
 
 // middlewares
 const jsonBodyParser = require('@middy/http-json-body-parser');
-const httpErrorHandler = require('@middy/http-error-handler');
 const validator = require('@middy/validator');
 
 // custom middlewares
 const ioLogger = require('../middlewares/io-logger');
+const errorHandler = require('../middlewares/error-handler');
 
 /**
  * Creates a 'middyfied' AWS Lambda handler function wrapped with Middy middlewares.
@@ -19,6 +19,6 @@ exports.middyfy = (options) => {
     .use(ioLogger())
     .use(jsonBodyParser())
     .use(validator({ eventSchema }))
-    .use(httpErrorHandler({ fallbackMessage: 'Unhandled error' }))
+    .use(errorHandler())
     .handler(handler);
 };

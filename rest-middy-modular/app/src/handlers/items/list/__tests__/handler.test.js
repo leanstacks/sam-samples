@@ -38,10 +38,22 @@ describe('ListItems::handle', () => {
     // Invoke the handler
     const result = await handler.handle({ ...eventFixtures.listItems });
 
+    const expectedResult = {
+      statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'Error',
+        code: 500,
+        statusCode: 500,
+        message: 'test',
+      }),
+    };
+
     // Expect the service to have been called
     expect(itemService.list).toHaveBeenCalledTimes(1);
     // Compare the result with the expected result
-    expect(result.statusCode).toEqual(500);
-    expect(result.body).toEqual('Unhandled error');
+    expect(result).toEqual(expectedResult);
   });
 });
