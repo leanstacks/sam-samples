@@ -1,6 +1,6 @@
+const Joi = require('joi');
+
 /**
  * A JSON Schema to validate the request event.
  */
-exports.eventSchema = {
-  type: 'object',
-};
+exports.eventSchema = Joi.object();

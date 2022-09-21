@@ -1,15 +1,10 @@
+const Joi = require('joi');
+
 /**
- * A JSON Schema to validate the request event.
+ * A Joi schema to validate the request event.
  */
-exports.eventSchema = {
-  type: 'object',
-  properties: {
-    body: {
-      type: 'object',
-      properties: {
-        name: { type: 'string', description: 'Full name' },
-      },
-      required: ['name'],
-    },
-  },
-};
+exports.eventSchema = Joi.object({
+  body: Joi.object({
+    name: Joi.string().required(),
+  }),
+});

@@ -8,10 +8,9 @@
     "@aws-sdk/client-dynamodb": "3.168.0",
     "@aws-sdk/lib-dynamodb": "3.168.0",
     "@middy/core": "3.3.1",
-    "@middy/http-error-handler": "3.3.1",
     "@middy/http-json-body-parser": "3.3.1",
-    "@middy/validator": "3.3.1",
-    "http-errors": "2.0.0"
+    "http-errors": "2.0.0",
+    "joi": "17.6.0"
   },
   "devDependencies": {
     "jest": "29.0.3",
