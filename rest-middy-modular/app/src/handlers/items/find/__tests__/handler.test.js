@@ -61,10 +61,10 @@ describe('FindItem::handle', () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: 'BadRequestError',
+        name: 'EventValidationError',
         code: 400,
         statusCode: 400,
-        message: 'Event object failed validation',
+        message: '"pathParameters.itemId" is required',
       }),
     };
 

@@ -27,7 +27,7 @@ const validatorMiddleware = (opts = {}) => {
     if (eventSchema) {
       const { value, error } = validate(eventSchema, request.event);
       if (error) {
-        throw error;
+        throw new createError(400, error.message, { name: 'EventValidationError' });
       }
       request.event = {
         ...request.event,
@@ -38,9 +38,9 @@ const validatorMiddleware = (opts = {}) => {
 
   const validatorMiddlewareAfter = (request) => {
     if (responseSchema) {
-      const { value, error } = validate(eventSchema, request.response);
+      const { error } = validate(eventSchema, request.response);
       if (error) {
-        throw error;
+        throw new createError(400, error.message, { name: 'ResponseValidationError' });
       }
     }
   };

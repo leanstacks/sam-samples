@@ -5,16 +5,16 @@
   "author": "Matthew Warman <leanstacker@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "3.168.0",
-    "@aws-sdk/lib-dynamodb": "3.168.0",
-    "@middy/core": "3.3.1",
-    "@middy/http-json-body-parser": "3.3.1",
+    "@aws-sdk/client-dynamodb": "3.172.0",
+    "@aws-sdk/lib-dynamodb": "3.172.0",
+    "@middy/core": "3.3.4",
+    "@middy/http-json-body-parser": "3.3.4",
     "http-errors": "2.0.0",
     "joi": "17.6.0"
   },
   "devDependencies": {
     "jest": "29.0.3",
-    "nodemon": "2.0.19",
+    "nodemon": "2.0.20",
     "npm-run-all": "4.1.5"
   },
   "scripts": {
