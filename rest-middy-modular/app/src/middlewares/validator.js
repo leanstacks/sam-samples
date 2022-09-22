@@ -38,7 +38,7 @@ const validatorMiddleware = (opts = {}) => {
 
   const validatorMiddlewareAfter = (request) => {
     if (responseSchema) {
-      const { error } = validate(eventSchema, request.response);
+      const { error } = validate(responseSchema, request.response);
       if (error) {
         throw new createError(400, error.message, { name: 'ResponseValidationError' });
       }
