@@ -1,8 +1,10 @@
-# SAM Serverless Samples: rest-dynamodb-modular
+# SAM Serverless Samples: rest-middy-modular
 
-This sample SAM application builds upon the `rest-dynamodb-local` sample This sample illustrates how to implement REST services with a modular code structure. This code structure promotes two important principles of application development, SRP and DRY. The Single Responsibility Principle, or SRP, states that each module should have a clearly defined purpose and should fulfill that purpose and that purpose alone. The Don't Repeat Yourself, or DRY, principle states that similar or idential logic should be consolidated to a single location promoting reuse and increased code quality.
+This sample SAM application builds upon the `rest-middy` sample. This sample illustrates how to implement REST services with a modular code structure. This code structure promotes two important principles of application development, SRP and DRY. The Single Responsibility Principle, or SRP, states that each module should have a clearly defined purpose and should fulfill that purpose and that purpose alone. The Don't Repeat Yourself, or DRY, principle states that similar or idential logic should be consolidated to a single location promoting reuse and increased code quality.
 
 While there are scenarios where a single function is developed and deployed in isolation, more often a collection of related serverless functions are needed to fulfill the capabilities of a domain. These could be a set of functions that provide standard CRUD APIs for a single domain object, e.g. a _Customer_, or a _Product_. Or perhaps a functional service that sends transactional email which must handle events from multiple services such as API Gateway, SQS, EventBridge, Step Functions, etc.
+
+This sample also demonstrates how to [create your own Middy middleware](https://middy.js.org/docs/category/writing-middlewares). Middy ships with a collection of ready-to-use middleware, but it may be necessary to create your own to satisfy your requirements.
 
 ## What's Inside
 
@@ -21,6 +23,7 @@ This sample uses the following technologies:
 
 - Node.js v16 - The foundation
 - AWS SDK v3 - AWS Services, e.g. DynamoDB
+- Middy - Middleware engine for AWS Lambda
 - Joi - Validation
 - Jest - Testing
 
